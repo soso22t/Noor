@@ -11,7 +11,7 @@ import gaimIcon from "@/assets/gaim.svg";
 import { ChevronDown } from "lucide-react";
 import MusicToggle from "@/components/MusicToggle";
 import backgroundImg from "@/assets/Ff.jpeg";
-import dividerImg from "@/assets/Photoroom_20260926_153304";
+import dividerImg from "@/assets/Photoroom_20260926_153304.png";
 import locationIcon from "@/assets/4.png";
 import flowerDivider from "@/assets/Photoroom_20260803_031459.png";
 import receptionImg from "@/assets/5.png";
