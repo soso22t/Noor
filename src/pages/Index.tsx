@@ -10,7 +10,8 @@ import RSVP from "@/components/RSVP";
 import gaimIcon from "@/assets/gaim.svg";
 import { ChevronDown } from "lucide-react";
 import MusicToggle from "@/components/MusicToggle";
-import backgroundImg from "@/assets/Photoroom_20260926_153304.png";
+import backgroundImg from "@/assets/IMG_7945.jpeg";
+import dividerImg from "@/assets/photo-output.png";
 import locationIcon from "@/assets/4.png";
 import flowerDivider from "@/assets/Photoroom_20260803_031459.png";
 import receptionImg from "@/assets/5.png";
@@ -86,8 +87,6 @@ className="hidden"
 {opened && <SprayParticles />}
       <MusicToggle active={opened} />
 <Envelope onOpen={() => setOpened(true)} />
-
-
 
 {opened && (
   <main
@@ -706,7 +705,6 @@ style={{ color: "#A67C2E" }}
     </div>
   </Reveal>
 </footer>
-
 
         </main>
       )}
