@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
-const musicSrc = "/music/Ahh.m4a";
+const musicSrc = "/music/nor.m4a";
 
 interface Props {
   active: boolean;
