@@ -61,9 +61,12 @@ const EventTimeline = () => {
       ref={containerRef}
       className="w-[92%] max-w-md p-6 sm:p-8 rounded-3xl text-center relative overflow-hidden my-4 mx-auto"
       style={{
-        background: "transparent",
+        background: "rgba(255,255,255,0.28)",
         color: "#C8A96A",
-        borderColor: "transparent",
+        border: "1px solid rgba(255,255,255,0.45)",
+        boxShadow: "0 12px 30px rgba(200,169,106,.12)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
       }}
     >
       {/* عنوان برنامج المناسبة */}
@@ -107,7 +110,7 @@ const EventTimeline = () => {
                 <div
                   className="col-span-2 text-left pl-2 sm:pl-3 font-arabic text-sm sm:text-base font-bold transition-opacity duration-300"
                   style={{
-                    color: "#C8A96A",
+                    color: "#33332B",
                     opacity: isActive ? 1 : 0,
                   }}
                 >
@@ -135,7 +138,7 @@ const EventTimeline = () => {
                 <div
                   className="col-span-2 text-right pr-2 sm:pr-3 font-display text-xs sm:text-sm font-semibold tracking-wider dir-ltr transition-opacity duration-300"
                   style={{
-                    color: "#C8A96A",
+                    color: "#33332B",
                     opacity: isActive ? 1 : 0,
                   }}
                 >
@@ -456,152 +459,159 @@ const Index = () => {
             />
           </section>
 
-        <section className="px-4 py-16">
-  <Reveal>
-    <div className="text-center mb-8">
-      <img
-        src={locationIcon}
-        alt=""
-        className="mx-auto mb-4 w-14 h-auto"
-      />
-      <h2
-        className="font-arabic text-3xl"
-        style={{ color: "#A67C2E" }}
-      >
-        {t("details_title")}
-      </h2>
-      <div
-        className="font-arabic text-sm mt-2"
-        style={{ color: "#7C7367" }}
-      >
-        {t("details_subtitle")}
-      </div>
-      <img
-        src={flowerDivider}
-        alt=""
-        className="mx-auto mt-4 mb-6 w-24 h-auto select-none"
-        draggable={false}
-      />
-    </div>
-  </Reveal>
-  <Reveal delay={200}>
-    <div
-      style={{
-        transform: "scale(0.9)",
-        transformOrigin: "top center",
-      }}
-    >
-      <div
-        className="max-w-sm mx-auto rounded-3xl p-4"
-        style={{
-          background: "#FFFFFF",
-          border: "1px solid #E7D8B7",
-          boxShadow: "0 12px 30px rgba(200,169,106,.12)",
-        }}
-      >
-        {/* اسم القاعة */}
-        <div className="flex flex-col items-center justify-center gap-1 mb-4">
-          <div className="flex items-center justify-center gap-2">
-            <img
-              src={locationIcon}
-              alt=""
-              className="w-7 h-7"
-            />
-            <span
-              className="font-arabic text-sm"
-              style={{
-                color: "#A67C2E",
-                fontWeight: 600,
-              }}
-            >
-              {t("hall_name")}
-            </span>
-          </div>
-          {/* الدور التاسع */}
-          <div
-            className="font-arabic text-sm"
-            style={{
-              color: "#7C7367",
-            }}
-          >
-            الدور التاسع
-          </div>
-        </div>
-        {/* الخريطة */}
-        <iframe
-          title={t("map_title")}
-          src="https://www.google.com/maps?q=Sapphire+Addis+Hotel,+Namibia+St,+Addis+Ababa,+Ethiopia&output=embed"
-          width="100%"
-          height="230"
-          loading="lazy"
-          style={{
-            border: 0,
-            borderRadius: "16px",
-          }}
-        />
-        {/* اسم الموقع */}
-        <div
-          className="text-center mt-4 font-arabic"
-          style={{
-            color: "#2F2A24",
-            fontSize: "15px",
-            fontWeight: 600,
-          }}
-        >
-          {t("hall_city")}
-        </div>
-        {/* وقت الحضور */}
-        {t("arrival_time").trim() && (
-          <div className="hidden items-center justify-center gap-2 mt-3 mb-5">
-            <Clock
-              className="w-4 h-4"
-              style={{ color: "#687451" }}
-            />
-            <span
-              className="font-arabic text-sm"
-              style={{ color: "#394132" }}
-            >
-              {t("arrival_time")}
-            </span>
-          </div>
-        )}
-        {/* الأزرار */}
-        <div className="grid grid-cols-2 gap-3">
-          <a
-            href="https://maps.app.goo.gl/HLfudh8kqaeihyzU6?g_st=ic"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="py-3 rounded-xl text-center font-arabic text-sm"
-            style={{
-              background: "#FFFFFF",
-              border: "1px solid #E7D8B7",
-              color: "#A67C2E",
-              fontWeight: 600,
-              textDecoration: "none",
-            }}
-          >
-            {t("open_map")}
-          </a>
-          <a
-            href="/event.ics"
-            className="py-3 rounded-xl text-center font-arabic text-sm"
-            style={{
-              background: "#C8A96A",
-              color: "#FFFFFF",
-              fontWeight: 600,
-              textDecoration: "none",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {t("add_calendar")}
-          </a>
-        </div>
-      </div>
-    </div>
-  </Reveal>
-</section>
+          <section className="px-4 py-16">
+            <Reveal>
+              <div className="text-center mb-8">
+                <img
+                  src={locationIcon}
+                  alt=""
+                  className="mx-auto mb-4 w-14 h-auto"
+                />
+                <h2
+                  className="font-arabic text-3xl"
+                  style={{ color: "#A67C2E" }}
+                >
+                  {t("details_title")}
+                </h2>
+                <div
+                  className="font-arabic text-sm mt-2"
+                  style={{ color: "#7C7367" }}
+                >
+                  {t("details_subtitle")}
+                </div>
+                <img
+                  src={flowerDivider}
+                  alt=""
+                  className="mx-auto mt-4 mb-6 w-24 h-auto select-none"
+                  draggable={false}
+                />
+              </div>
+            </Reveal>
+
+            <Reveal delay={200}>
+              <div
+                style={{
+                  transform: "scale(0.9)",
+                  transformOrigin: "top center",
+                }}
+              >
+                <div
+                  className="max-w-sm mx-auto rounded-3xl p-4"
+                  style={{
+                    background: "#FFFFFF",
+                    border: "1px solid #E7D8B7",
+                    boxShadow: "0 12px 30px rgba(200,169,106,.12)",
+                  }}
+                >
+                  {/* اسم القاعة */}
+                  <div className="flex flex-col items-center justify-center gap-1 mb-4">
+                    <div className="flex items-center justify-center gap-2">
+                      <img
+                        src={locationIcon}
+                        alt=""
+                        className="w-7 h-7"
+                      />
+                      <span
+                        className="font-arabic text-sm"
+                        style={{
+                          color: "#A67C2E",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {t("hall_name")}
+                      </span>
+                    </div>
+
+                    {/* الدور التاسع */}
+                    <div
+                      className="font-arabic text-sm"
+                      style={{
+                        color: "#7C7367",
+                      }}
+                    >
+                      {t("venue_city")}
+                    </div>
+                  </div>
+
+                  {/* الخريطة */}
+                  <iframe
+                    title={t("map_title")}
+                    src="https://www.google.com/maps?q=Sapphire+Addis+Hotel,+Namibia+St,+Addis+Ababa,+Ethiopia&output=embed"
+                    width="100%"
+                    height="230"
+                    loading="lazy"
+                    style={{
+                      border: 0,
+                      borderRadius: "16px",
+                    }}
+                  />
+
+                  {/* اسم الموقع */}
+                  <div
+                    className="text-center mt-4 font-arabic"
+                    style={{
+                      color: "#2F2A24",
+                      fontSize: "15px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {t("hall_city")}
+                  </div>
+
+                  {/* وقت الحضور */}
+                  {t("arrival_time").trim() && (
+                    <div className="hidden items-center justify-center gap-2 mt-3 mb-5">
+                      <Clock
+                        className="w-4 h-4"
+                        style={{ color: "#687451" }}
+                      />
+                      <span
+                        className="font-arabic text-sm"
+                        style={{ color: "#394132" }}
+                      >
+                        {t("arrival_time")}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* الأزرار */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <a
+                      href="https://maps.app.goo.gl/HLfudh8kqaeihyzU6?g_st=ic"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-3 rounded-xl text-center font-arabic text-sm"
+                      style={{
+                        background: "#FFFFFF",
+                        border: "1px solid #E7D8B7",
+                        color: "#A67C2E",
+                        fontWeight: 600,
+                        textDecoration: "none",
+                      }}
+                    >
+                      {t("open_map")}
+                    </a>
+
+                    <a
+                      href="/event.ics"
+                      className="py-3 rounded-xl text-center font-arabic text-sm"
+                      style={{
+                        background: "#C8A96A",
+                        color: "#FFFFFF",
+                        fontWeight: 600,
+                        textDecoration: "none",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {t("add_calendar")}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          </section>
 
           {/* Details */}
           <section className="px-4 py-16">
