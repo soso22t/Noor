@@ -181,6 +181,16 @@ const Index = () => {
         minHeight: "100vh",
       }}
     >
+      {/* تحميل الفيديو من أول دخول الموقع */}
+      <video
+        src={invitationImg}
+        preload="auto"
+        muted
+        playsInline
+        className="fixed w-px h-px opacity-0 pointer-events-none"
+        aria-hidden="true"
+      />
+
       {/* Ornamental gold damask pattern background */}
       <div
         aria-hidden
@@ -236,13 +246,13 @@ const Index = () => {
 
           <section className="flex justify-center relative z-20">
             <div className="relative w-full aspect-[9/16] overflow-hidden">
-
               <video
                 src={invitationImg}
                 autoPlay
                 muted
                 loop
                 playsInline
+                preload="auto"
                 className="absolute inset-0 w-full h-full object-cover animate-videoFade"
                 style={{
                   background: "#F7F5F0",
@@ -473,12 +483,14 @@ const Index = () => {
                 >
                   {t("details_title")}
                 </h2>
+
                 <div
                   className="font-arabic text-sm mt-2"
                   style={{ color: "#7C7367" }}
                 >
                   {t("details_subtitle")}
                 </div>
+
                 <img
                   src={flowerDivider}
                   alt=""
@@ -511,6 +523,7 @@ const Index = () => {
                         alt=""
                         className="w-7 h-7"
                       />
+
                       <span
                         className="font-arabic text-sm"
                         style={{
@@ -565,6 +578,7 @@ const Index = () => {
                         className="w-4 h-4"
                         style={{ color: "#687451" }}
                       />
+
                       <span
                         className="font-arabic text-sm"
                         style={{ color: "#394132" }}
@@ -659,6 +673,7 @@ const Index = () => {
                   <span className="font-iran">
                     {t("designer_name1")}
                   </span>
+
                   <span
                     className={`${
                       lang === "ar" ? "font-sull" : "font-sans"
@@ -666,6 +681,7 @@ const Index = () => {
                   >
                     {t("designer_and")}
                   </span>
+
                   <span className="font-iran">
                     {t("designer_name2")}
                   </span>
@@ -701,6 +717,7 @@ const Index = () => {
                     style={{ color: "#7C7367" }}
                   >
                     TikTok @shim2t
+
                     <svg
                       className="w-3 h-3"
                       fill="none"
