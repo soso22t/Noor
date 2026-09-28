@@ -14,47 +14,145 @@ import backgroundImg from "@/assets/Ff.jpeg";
 import dividerImg from "@/assets/Photoroom_20260926_153304.png";
 import locationIcon from "@/assets/4.png";
 import flowerDivider from "@/assets/Photoroom_20260803_031459.png";
-import receptionImg from "@/assets/5.png";
-import programIcon from "@/assets/Photoroom_20260803_042046.png";
-import dinnerImg from "@/assets/1.png";
-import zaffaImg from "@/assets/6.png";
-import phoneImg from "@/assets/2.png";
-import kidsImg from "@/assets/3.png";
 import rsvpIcon from "@/assets/Photoroom_20260803_042103.png";
 import { useLang } from "@/i18n/LanguageContext";
+
+interface EventItem {
+  time: string;
+  title: string;
+}
+
+const events: EventItem[] = [
+  { time: "9:30 PM", title: "الاستقبال" },
+  { time: "11:30 PM", title: "الزفة" },
+  // { time: "1:00 AM", title: "العشاء" },
+];
+
+const EventTimeline = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      const start = windowHeight * 0.8;
+      const end = windowHeight * 0.2;
+      const current = rect.top;
+
+      let progress = (start - current) / (start - end);
+      progress = Math.max(0, Math.min(1, progress));
+
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="w-[92%] max-w-md p-6 sm:p-8 rounded-3xl text-center backdrop-blur-md border border-white/40 shadow-xl relative overflow-hidden my-4 mx-auto"
+      style={{
+        background: "rgba(247, 245, 240, 0.72)",
+        color: "#394132",
+        borderColor: "rgba(255, 253, 249, 0.85)",
+      }}
+    >
+      {/* عنوان برنامج المناسبة */}
+      <h3
+        className="font-arabic text-xl sm:text-2xl font-bold mb-8"
+        style={{ color: "#687451" }}
+      >
+        برنامج المناسبة
+      </h3>
+
+      {/* منطقة الخط والدوائر */}
+      <div className="relative max-w-xs mx-auto py-2">
+        {/* الخط الخلفي الباهت */}
+        <div
+          className="absolute left-1/2 top-3 bottom-3 -translate-x-1/2 w-[2px] opacity-30"
+          style={{ backgroundColor: "#687451" }}
+        />
+
+        {/* الخط المضيء الذي ينزل مع السكرول */}
+        <div
+          className="absolute left-1/2 top-3 -translate-x-1/2 w-[2.5px] rounded-full transition-all duration-150 ease-out"
+          style={{
+            height: `${scrollProgress * 88}%`,
+            backgroundColor: "#687451",
+            boxShadow: "0 0 10px rgba(104, 116, 81, 0.8)",
+          }}
+        />
+
+        {/* الفقرات والدوائر */}
+        <div className="space-y-12 relative z-10">
+          {events.map((event, index) => {
+            const threshold = index / (events.length - 1 || 1);
+            const isActive = scrollProgress >= threshold - 0.1;
+
+            return (
+              <div
+                key={index}
+                className="grid grid-cols-5 items-center dir-rtl"
+              >
+                {/* اسم المناسبة */}
+                <div
+                  className="col-span-2 text-left pl-2 sm:pl-3 font-arabic text-sm sm:text-base font-bold transition-opacity duration-300"
+                  style={{
+                    color: "#394132",
+                    opacity: isActive ? 1 : 0,
+                  }}
+                >
+                  {event.title}
+                </div>
+
+                {/* الدائرة المتوهجة */}
+                <div className="col-span-1 flex justify-center items-center">
+                  <div
+                    className="w-4 h-4 rounded-full border-2 transition-all duration-500 ease-out"
+                    style={{
+                      borderColor: "#687451",
+                      backgroundColor: isActive
+                        ? "#687451"
+                        : "rgba(255, 253, 249, 0.7)",
+                      transform: isActive ? "scale(1.3)" : "scale(1)",
+                      boxShadow: isActive
+                        ? "0 0 12px 3px rgba(104, 116, 81, 0.9), 0 0 22px 6px rgba(104, 116, 81, 0.5)"
+                        : "none",
+                    }}
+                  />
+                </div>
+
+                {/* الوقت */}
+                <div
+                  className="col-span-2 text-right pr-2 sm:pr-3 font-display text-xs sm:text-sm font-semibold tracking-wider dir-ltr transition-opacity duration-300"
+                  style={{
+                    color: "#394132",
+                    opacity: isActive ? 1 : 0,
+                  }}
+                >
+                  {event.time}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Index = () => {
   const [opened, setOpened] = useState(false);
   const { t, lang, toggle } = useLang();
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const startX = useRef(0);
-  const startScroll = useRef(0);
-  const dragging = useRef(false);
   const [hideScrollHint, setHideScrollHint] = useState(false);
-
-  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    dragging.current = true;
-    startX.current = e.touches[0].pageX;
-    startScroll.current = el.scrollLeft;
-  };
-
-  const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!dragging.current) return;
-
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const walk = e.touches[0].pageX - startX.current;
-    el.scrollLeft = startScroll.current - walk;
-  };
-
-  const onTouchEnd = () => {
-    dragging.current = false;
-  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -506,142 +604,7 @@ const Index = () => {
 
           {/* Details */}
           <section className="px-4 py-16">
-            <Reveal>
-              <div className="text-center mb-10">
-                <img
-                  src={programIcon}
-                  alt=""
-                  className="mx-auto mb-5 w-32 h-auto select-none"
-                  draggable={false}
-                />
-
-                <h2
-                  className="font-arabic text-3xl"
-                  style={{ color: "#A67C2E" }}
-                >
-                  {t("program_title")}
-                </h2>
-
-                <div
-                  className="font-arabic text-sm mt-2"
-                  style={{ color: "#7B8470" }}
-                >
-                  {t("program_subtitle")}
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={150}>
-              <div
-                ref={scrollRef}
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd}
-                className="overflow-x-auto pb-3"
-                style={{
-                  WebkitOverflowScrolling: "touch",
-                  scrollbarWidth: "none",
-                  touchAction: "pan-x",
-                }}
-              >
-                <div className="flex w-max gap-8 px-4">
-                  <div className="text-center shrink-0">
-                    <img
-                      src={receptionImg}
-                      alt=""
-                      className="w-16 h-auto mx-auto"
-                    />
-                    <div
-                      className="font-arabic text-sm mt-3"
-                      style={{ color: "#394132" }}
-                    >
-                      {t("program_reception")}
-                    </div>
-                    <div
-                      className="font-arabic text-xs mt-1"
-                      style={{ color: "#7B8470" }}
-                    >
-                      {t("reception_time")}
-                    </div>
-                  </div>
-
-                  <div className="text-center shrink-0">
-                    <img
-                      src={zaffaImg}
-                      alt=""
-                      className="w-16 h-auto mx-auto"
-                    />
-                    <div
-                      className="font-arabic text-sm mt-3"
-                      style={{ color: "#394132" }}
-                    >
-                      {t("program_zaffa")}
-                    </div>
-                    <div
-                      className="font-arabic text-xs mt-1"
-                      style={{ color: "#7B8470" }}
-                    >
-                      {t("zaffa_time")}
-                    </div>
-                  </div>
-
-                  <div className="text-center shrink-0">
-                    <img
-                      src={dinnerImg}
-                      alt=""
-                      className="w-16 h-auto mx-auto"
-                    />
-                    <div
-                      className="font-arabic text-sm mt-3"
-                      style={{ color: "#394132" }}
-                    >
-                      {t("program_dinner")}
-                    </div>
-                    <div
-                      className="font-arabic text-xs mt-1"
-                      style={{ color: "#7B8470" }}
-                    >
-                      {t("dinner_time")}
-                    </div>
-                  </div>
-
-                  <div className="hidden">
-                    <img
-                      src={phoneImg}
-                      alt=""
-                      className="w-16 h-auto mx-auto"
-                    />
-                    <div
-                      className="font-arabic text-sm mt-3"
-                      style={{ color: "#394132", width: "120px" }}
-                    >
-                      {t("no_cameras")}
-                    </div>
-                  </div>
-
-                  <div className="hidden">
-                    <img
-                      src={kidsImg}
-                      alt=""
-                      className="w-16 h-auto mx-auto"
-                    />
-                    <div
-                      className="font-arabic text-sm mt-3"
-                      style={{ color: "#394132", width: "120px" }}
-                    >
-                      {t("no_kids")}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <p
-                className="text-center font-arabic text-sm mt-5"
-                style={{ color: "#7B8470" }}
-              >
-                {t("swipe_more")}
-              </p>
-            </Reveal>
+            <EventTimeline />
           </section>
 
           {/* RSVP */}
