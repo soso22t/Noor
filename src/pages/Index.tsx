@@ -8,7 +8,6 @@ import Countdown from "@/components/Countdown";
 import Timeline from "@/components/Timeline";
 import RSVP from "@/components/RSVP";
 import gaimIcon from "@/assets/gaim.svg";
-import { ChevronDown } from "lucide-react";
 import MusicToggle from "@/components/MusicToggle";
 import backgroundImg from "@/assets/Ff.jpeg";
 import dividerImg from "@/assets/Photoroom_20260926_153304.png";
@@ -58,21 +57,17 @@ const EventTimeline = () => {
         WebkitBackdropFilter: "blur(12px)",
       }}
     >
-      {/* عنوان برنامج المناسبة */}
       <h3
         className="font-arabic text-xl sm:text-2xl font-bold mb-8"
         style={{ color: "#C8A96A" }}
       >
         برنامج المناسبة
       </h3>
-      {/* منطقة الخط والدوائر */}
       <div className="relative max-w-xs mx-auto py-2">
-        {/* الخط الخلفي الباهت */}
         <div
           className="absolute left-1/2 top-3 bottom-3 -translate-x-1/2 w-[2px] opacity-30"
           style={{ backgroundColor: "#C8A96A" }}
         />
-        {/* الخط المضيء الذي ينزل مع السكرول */}
         <div
           className="absolute left-1/2 top-3 -translate-x-1/2 w-[2.5px] rounded-full transition-all duration-150 ease-out"
           style={{
@@ -81,7 +76,6 @@ const EventTimeline = () => {
             boxShadow: "0 0 10px rgba(200, 169, 106, 0.8)",
           }}
         />
-        {/* الفقرات والدوائر */}
         <div className="space-y-12 relative z-10">
           {events.map((event, index) => {
             const threshold = index / (events.length - 1 || 1);
@@ -91,7 +85,6 @@ const EventTimeline = () => {
                 key={index}
                 className="grid grid-cols-5 items-center dir-rtl"
               >
-                {/* اسم المناسبة */}
                 <div
                   className="col-span-2 text-left pl-2 sm:pl-3 font-arabic text-sm sm:text-base font-bold transition-opacity duration-300"
                   style={{
@@ -101,7 +94,6 @@ const EventTimeline = () => {
                 >
                   {event.title}
                 </div>
-                {/* الدائرة المتوهجة */}
                 <div className="col-span-1 flex justify-center items-center">
                   <div
                     className="w-4 h-4 rounded-full border-2 transition-all duration-500 ease-out"
@@ -117,7 +109,6 @@ const EventTimeline = () => {
                     }}
                   />
                 </div>
-                {/* الوقت */}
                 <div
                   className="col-span-2 text-right pr-2 sm:pr-3 font-display text-xs sm:text-sm font-semibold tracking-wider dir-ltr transition-opacity duration-300"
                   style={{
@@ -138,7 +129,9 @@ const EventTimeline = () => {
 const Index = () => {
   const [opened, setOpened] = useState(false);
   const { t, lang, toggle } = useLang();
-  const autoScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
   const autoScrollFrameRef = useRef<number | null>(null);
   const autoScrollStoppedRef = useRef(false);
   useEffect(() => {
@@ -150,13 +143,17 @@ const Index = () => {
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
       if (maxScroll <= startPosition) return;
-      const duration = 4000 * 1000;
+      const duration = 4000;
       const startTime = performance.now();
       const animateScroll = (currentTime: number) => {
         if (autoScrollStoppedRef.current) return;
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        const easedProgress = progress;
+        // حركة سلسة وطبيعية
+        const easedProgress =
+          progress < 0.5
+            ? 2 * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
         window.scrollTo(
           0,
           startPosition +
@@ -165,6 +162,8 @@ const Index = () => {
         if (progress < 1) {
           autoScrollFrameRef.current =
             requestAnimationFrame(animateScroll);
+        } else {
+          autoScrollFrameRef.current = null;
         }
       };
       autoScrollFrameRef.current =
@@ -173,9 +172,11 @@ const Index = () => {
     return () => {
       if (autoScrollTimerRef.current) {
         clearTimeout(autoScrollTimerRef.current);
+        autoScrollTimerRef.current = null;
       }
       if (autoScrollFrameRef.current) {
         cancelAnimationFrame(autoScrollFrameRef.current);
+        autoScrollFrameRef.current = null;
       }
     };
   }, [opened]);
@@ -194,7 +195,6 @@ const Index = () => {
     };
     window.addEventListener("touchstart", stopAutoScroll, {
       passive: true,
-      once: true,
     });
     return () => {
       window.removeEventListener("touchstart", stopAutoScroll);
@@ -497,7 +497,6 @@ const Index = () => {
                     boxShadow: "0 12px 30px rgba(200,169,106,.12)",
                   }}
                 >
-                  {/* اسم القاعة */}
                   <div className="flex flex-col items-center justify-center gap-1 mb-4">
                     <div className="flex items-center justify-center gap-2">
                       <img
@@ -515,7 +514,6 @@ const Index = () => {
                         {t("hall_name")}
                       </span>
                     </div>
-                    {/* الدور التاسع */}
                     <div
                       className="font-arabic text-sm"
                       style={{
@@ -525,7 +523,6 @@ const Index = () => {
                       {t("venue_city")}
                     </div>
                   </div>
-                  {/* الخريطة */}
                   <iframe
                     title={t("map_title")}
                     src="https://www.google.com/maps?q=Sapphire+Addis+Hotel,+Namibia+St,+Addis+Ababa,+Ethiopia&output=embed"
@@ -537,7 +534,6 @@ const Index = () => {
                       borderRadius: "16px",
                     }}
                   />
-                  {/* اسم الموقع */}
                   <div
                     className="text-center mt-4 font-arabic"
                     style={{
@@ -548,7 +544,6 @@ const Index = () => {
                   >
                     {t("hall_city")}
                   </div>
-                  {/* وقت الحضور */}
                   {t("arrival_time").trim() && (
                     <div className="hidden items-center justify-center gap-2 mt-3 mb-5">
                       <Clock
@@ -563,7 +558,6 @@ const Index = () => {
                       </span>
                     </div>
                   )}
-                  {/* الأزرار */}
                   <div className="grid grid-cols-2 gap-3">
                     <a
                       href="https://maps.app.goo.gl/HLfudh8kqaeihyzU6?g_st=ic"
