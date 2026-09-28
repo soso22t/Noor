@@ -143,7 +143,7 @@ const Index = () => {
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
       if (maxScroll <= startPosition) return;
-      const duration = 13000;
+      const duration = 16000;
       const startTime = performance.now();
       const animateScroll = (currentTime: number) => {
         if (autoScrollStoppedRef.current) return;
