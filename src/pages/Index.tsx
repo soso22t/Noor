@@ -59,17 +59,17 @@ const EventTimeline = () => {
   return (
     <div
       ref={containerRef}
-      className="w-[92%] max-w-md p-6 sm:p-8 rounded-3xl text-center backdrop-blur-md border border-white/40 shadow-xl relative overflow-hidden my-4 mx-auto"
+      className="w-[92%] max-w-md p-6 sm:p-8 rounded-3xl text-center relative overflow-hidden my-4 mx-auto"
       style={{
-        background: "rgba(247, 245, 240, 0.72)",
-        color: "#394132",
-        borderColor: "rgba(255, 253, 249, 0.85)",
+        background: "transparent",
+        color: "#C8A96A",
+        borderColor: "transparent",
       }}
     >
       {/* عنوان برنامج المناسبة */}
       <h3
         className="font-arabic text-xl sm:text-2xl font-bold mb-8"
-        style={{ color: "#687451" }}
+        style={{ color: "#C8A96A" }}
       >
         برنامج المناسبة
       </h3>
@@ -79,7 +79,7 @@ const EventTimeline = () => {
         {/* الخط الخلفي الباهت */}
         <div
           className="absolute left-1/2 top-3 bottom-3 -translate-x-1/2 w-[2px] opacity-30"
-          style={{ backgroundColor: "#687451" }}
+          style={{ backgroundColor: "#C8A96A" }}
         />
 
         {/* الخط المضيء الذي ينزل مع السكرول */}
@@ -87,8 +87,8 @@ const EventTimeline = () => {
           className="absolute left-1/2 top-3 -translate-x-1/2 w-[2.5px] rounded-full transition-all duration-150 ease-out"
           style={{
             height: `${scrollProgress * 88}%`,
-            backgroundColor: "#687451",
-            boxShadow: "0 0 10px rgba(104, 116, 81, 0.8)",
+            backgroundColor: "#C8A96A",
+            boxShadow: "0 0 10px rgba(200, 169, 106, 0.8)",
           }}
         />
 
@@ -107,7 +107,7 @@ const EventTimeline = () => {
                 <div
                   className="col-span-2 text-left pl-2 sm:pl-3 font-arabic text-sm sm:text-base font-bold transition-opacity duration-300"
                   style={{
-                    color: "#394132",
+                    color: "#C8A96A",
                     opacity: isActive ? 1 : 0,
                   }}
                 >
@@ -119,13 +119,13 @@ const EventTimeline = () => {
                   <div
                     className="w-4 h-4 rounded-full border-2 transition-all duration-500 ease-out"
                     style={{
-                      borderColor: "#687451",
+                      borderColor: "#C8A96A",
                       backgroundColor: isActive
-                        ? "#687451"
-                        : "rgba(255, 253, 249, 0.7)",
+                        ? "#C8A96A"
+                        : "transparent",
                       transform: isActive ? "scale(1.3)" : "scale(1)",
                       boxShadow: isActive
-                        ? "0 0 12px 3px rgba(104, 116, 81, 0.9), 0 0 22px 6px rgba(104, 116, 81, 0.5)"
+                        ? "0 0 12px 3px rgba(200, 169, 106, 0.9), 0 0 22px 6px rgba(200, 169, 106, 0.5)"
                         : "none",
                     }}
                   />
@@ -135,7 +135,7 @@ const EventTimeline = () => {
                 <div
                   className="col-span-2 text-right pr-2 sm:pr-3 font-display text-xs sm:text-sm font-semibold tracking-wider dir-ltr transition-opacity duration-300"
                   style={{
-                    color: "#394132",
+                    color: "#C8A96A",
                     opacity: isActive ? 1 : 0,
                   }}
                 >
@@ -456,7 +456,7 @@ const Index = () => {
             />
           </section>
 
-         <section className="px-4 py-16">
+        <section className="px-4 py-16">
   <Reveal>
     <div className="text-center mb-8">
       <img
@@ -464,21 +464,18 @@ const Index = () => {
         alt=""
         className="mx-auto mb-4 w-14 h-auto"
       />
-
       <h2
         className="font-arabic text-3xl"
         style={{ color: "#A67C2E" }}
       >
         {t("details_title")}
       </h2>
-
       <div
         className="font-arabic text-sm mt-2"
         style={{ color: "#7C7367" }}
       >
         {t("details_subtitle")}
       </div>
-
       <img
         src={flowerDivider}
         alt=""
@@ -487,7 +484,6 @@ const Index = () => {
       />
     </div>
   </Reveal>
-
   <Reveal delay={200}>
     <div
       style={{
@@ -511,7 +507,6 @@ const Index = () => {
               alt=""
               className="w-7 h-7"
             />
-
             <span
               className="font-arabic text-sm"
               style={{
@@ -522,7 +517,6 @@ const Index = () => {
               {t("hall_name")}
             </span>
           </div>
-
           {/* الدور التاسع */}
           <div
             className="font-arabic text-sm"
@@ -533,11 +527,10 @@ const Index = () => {
             الدور التاسع
           </div>
         </div>
-
         {/* الخريطة */}
         <iframe
           title={t("map_title")}
-          src="https://www.google.com/maps?q=https://maps.app.goo.gl/HLfudh8kqaeihyzU6?g_st=ic&output=embed"
+          src="https://www.google.com/maps?q=Sapphire+Addis+Hotel,+Namibia+St,+Addis+Ababa,+Ethiopia&output=embed"
           width="100%"
           height="230"
           loading="lazy"
@@ -546,7 +539,6 @@ const Index = () => {
             borderRadius: "16px",
           }}
         />
-
         {/* اسم الموقع */}
         <div
           className="text-center mt-4 font-arabic"
@@ -558,7 +550,6 @@ const Index = () => {
         >
           {t("hall_city")}
         </div>
-
         {/* وقت الحضور */}
         {t("arrival_time").trim() && (
           <div className="hidden items-center justify-center gap-2 mt-3 mb-5">
@@ -566,7 +557,6 @@ const Index = () => {
               className="w-4 h-4"
               style={{ color: "#687451" }}
             />
-
             <span
               className="font-arabic text-sm"
               style={{ color: "#394132" }}
@@ -575,7 +565,6 @@ const Index = () => {
             </span>
           </div>
         )}
-
         {/* الأزرار */}
         <div className="grid grid-cols-2 gap-3">
           <a
@@ -593,7 +582,6 @@ const Index = () => {
           >
             {t("open_map")}
           </a>
-
           <a
             href="/event.ics"
             className="py-3 rounded-xl text-center font-arabic text-sm"
