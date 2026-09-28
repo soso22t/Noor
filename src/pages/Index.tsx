@@ -456,152 +456,164 @@ const Index = () => {
             />
           </section>
 
-          <section className="px-4 py-16">
-            <Reveal>
-              <div className="text-center mb-8">
-                <img
-                  src={locationIcon}
-                  alt=""
-                  className="mx-auto mb-4 w-14 h-auto"
-                />
+         <section className="px-4 py-16">
+  <Reveal>
+    <div className="text-center mb-8">
+      <img
+        src={locationIcon}
+        alt=""
+        className="mx-auto mb-4 w-14 h-auto"
+      />
 
-                <h2
-                  className="font-arabic text-3xl"
-                  style={{ color: "#A67C2E" }}
-                >
-                  {t("details_title")}
-                </h2>
+      <h2
+        className="font-arabic text-3xl"
+        style={{ color: "#A67C2E" }}
+      >
+        {t("details_title")}
+      </h2>
 
-                <div
-                  className="font-arabic text-sm mt-2"
-                  style={{ color: "#7C7367" }}
-                >
-                  {t("details_subtitle")}
-                </div>
+      <div
+        className="font-arabic text-sm mt-2"
+        style={{ color: "#7C7367" }}
+      >
+        {t("details_subtitle")}
+      </div>
 
-                <img
-                  src={flowerDivider}
-                  alt=""
-                  className="mx-auto mt-4 mb-6 w-24 h-auto select-none"
-                  draggable={false}
-                />
-              </div>
-            </Reveal>
+      <img
+        src={flowerDivider}
+        alt=""
+        className="mx-auto mt-4 mb-6 w-24 h-auto select-none"
+        draggable={false}
+      />
+    </div>
+  </Reveal>
 
-            <Reveal delay={200}>
-              <div
-                style={{
-                  transform: "scale(0.9)",
-                  transformOrigin: "top center",
-                }}
-              >
-                <div
-                  className="max-w-sm mx-auto rounded-3xl p-4"
-                  style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #E7D8B7",
-                    boxShadow: "0 12px 30px rgba(200,169,106,.12)",
-                  }}
-                >
-                  {/* اسم القاعة */}
-                  <div className="flex items-center justify-center gap-2 mb-4">
-                    <img
-                      src={locationIcon}
-                      alt=""
-                      className="w-7 h-7"
-                    />
+  <Reveal delay={200}>
+    <div
+      style={{
+        transform: "scale(0.9)",
+        transformOrigin: "top center",
+      }}
+    >
+      <div
+        className="max-w-sm mx-auto rounded-3xl p-4"
+        style={{
+          background: "#FFFFFF",
+          border: "1px solid #E7D8B7",
+          boxShadow: "0 12px 30px rgba(200,169,106,.12)",
+        }}
+      >
+        {/* اسم القاعة */}
+        <div className="flex flex-col items-center justify-center gap-1 mb-4">
+          <div className="flex items-center justify-center gap-2">
+            <img
+              src={locationIcon}
+              alt=""
+              className="w-7 h-7"
+            />
 
-                    <span
-                      className="font-arabic text-sm"
-                      style={{
-                        color: "#A67C2E",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {t("hall_name")}
-                    </span>
-                  </div>
+            <span
+              className="font-arabic text-sm"
+              style={{
+                color: "#A67C2E",
+                fontWeight: 600,
+              }}
+            >
+              {t("hall_name")}
+            </span>
+          </div>
 
-                  {/* الخريطة */}
-                  <iframe
-                    title={t("map_title")}
-                    src="https://www.google.com/maps?q=قصر+ليلة+العمر+للأحتفالات+الدمام&output=embed"
-                    width="100%"
-                    height="230"
-                    loading="lazy"
-                    style={{
-                      border: 0,
-                      borderRadius: "16px",
-                    }}
-                  />
+          {/* الدور التاسع */}
+          <div
+            className="font-arabic text-sm"
+            style={{
+              color: "#7C7367",
+            }}
+          >
+            الدور التاسع
+          </div>
+        </div>
 
-                  {/* اسم الموقع */}
-                  <div
-                    className="text-center mt-4 font-arabic"
-                    style={{
-                      color: "#2F2A24",
-                      fontSize: "15px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {t("hall_city")}
-                  </div>
+        {/* الخريطة */}
+        <iframe
+          title={t("map_title")}
+          src="https://www.google.com/maps?q=https://maps.app.goo.gl/HLfudh8kqaeihyzU6?g_st=ic&output=embed"
+          width="100%"
+          height="230"
+          loading="lazy"
+          style={{
+            border: 0,
+            borderRadius: "16px",
+          }}
+        />
 
-                  {/* وقت الحضور */}
-                  {t("arrival_time").trim() && (
-                    <div className="hidden items-center justify-center gap-2 mt-3 mb-5">
-                      <Clock
-                        className="w-4 h-4"
-                        style={{ color: "#687451" }}
-                      />
+        {/* اسم الموقع */}
+        <div
+          className="text-center mt-4 font-arabic"
+          style={{
+            color: "#2F2A24",
+            fontSize: "15px",
+            fontWeight: 600,
+          }}
+        >
+          {t("hall_city")}
+        </div>
 
-                      <span
-                        className="font-arabic text-sm"
-                        style={{ color: "#394132" }}
-                      >
-                        {t("arrival_time")}
-                      </span>
-                    </div>
-                  )}
+        {/* وقت الحضور */}
+        {t("arrival_time").trim() && (
+          <div className="hidden items-center justify-center gap-2 mt-3 mb-5">
+            <Clock
+              className="w-4 h-4"
+              style={{ color: "#687451" }}
+            />
 
-                  {/* الأزرار */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <a
-                      href="https://www.google.com/maps?q=قصر+ليلة+العمر+للأحتفالات+الدمام"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-3 rounded-xl text-center font-arabic text-sm"
-                      style={{
-                        background: "#FFFFFF",
-                        border: "1px solid #E7D8B7",
-                        color: "#A67C2E",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                      }}
-                    >
-                      {t("open_map")}
-                    </a>
+            <span
+              className="font-arabic text-sm"
+              style={{ color: "#394132" }}
+            >
+              {t("arrival_time")}
+            </span>
+          </div>
+        )}
 
-                    <a
-                      href="/event.ics"
-                      className="py-3 rounded-xl text-center font-arabic text-sm"
-                      style={{
-                        background: "#C8A96A",
-                        color: "#FFFFFF",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {t("add_calendar")}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          </section>
+        {/* الأزرار */}
+        <div className="grid grid-cols-2 gap-3">
+          <a
+            href="https://maps.app.goo.gl/HLfudh8kqaeihyzU6?g_st=ic"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="py-3 rounded-xl text-center font-arabic text-sm"
+            style={{
+              background: "#FFFFFF",
+              border: "1px solid #E7D8B7",
+              color: "#A67C2E",
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+          >
+            {t("open_map")}
+          </a>
+
+          <a
+            href="/event.ics"
+            className="py-3 rounded-xl text-center font-arabic text-sm"
+            style={{
+              background: "#C8A96A",
+              color: "#FFFFFF",
+              fontWeight: 600,
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {t("add_calendar")}
+          </a>
+        </div>
+      </div>
+    </div>
+  </Reveal>
+</section>
 
           {/* Details */}
           <section className="px-4 py-16">
