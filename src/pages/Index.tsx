@@ -153,11 +153,33 @@ const Index = () => {
   const { t, lang, toggle } = useLang();
   const musicRef = useRef<MusicToggleRef | null>(null);
   const invitationVideoRef = useRef<HTMLVideoElement | null>(null);
+  const preloadVideoRef = useRef<HTMLVideoElement | null>(null);
   const autoScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
   const autoScrollFrameRef = useRef<number | null>(null);
   const autoScrollStoppedRef = useRef(false);
+  useEffect(() => {
+    const video = preloadVideoRef.current;
+    if (!video) return;
+    video.preload = "auto";
+    video.load();
+    const prepareFirstFrame = () => {
+      try {
+        video.currentTime = 0;
+      } catch {}
+    };
+    if (video.readyState >= 2) {
+      prepareFirstFrame();
+    } else {
+      video.addEventListener("loadeddata", prepareFirstFrame, {
+        once: true,
+      });
+    }
+    return () => {
+      video.removeEventListener("loadeddata", prepareFirstFrame);
+    };
+  }, []);
   useEffect(() => {
     if (!opened) return;
     autoScrollStoppedRef.current = false;
@@ -244,14 +266,20 @@ const Index = () => {
         minHeight: "100vh",
       }}
     >
-      {/* تحميل فيديو الدعوة من البداية بدون تشغيل */}
+      {/* تحميل وتجهيز أول فريم من فيديو الدعوة من البداية بدون تشغيل */}
       <video
+        ref={preloadVideoRef}
         src={invitationImg}
         preload="auto"
         muted
         playsInline
         className="fixed w-px h-px opacity-0 pointer-events-none"
         aria-hidden="true"
+        onLoadedData={(e) => {
+          try {
+            e.currentTarget.currentTime = 0;
+          } catch {}
+        }}
       />
       {/* تحميل الحروف من البداية */}
       <img
@@ -263,17 +291,6 @@ const Index = () => {
       <img
         src={englishLetters}
         alt=""
-        className="fixed w-px h-px opacity-0 pointer-events-none"
-        aria-hidden="true"
-      />
-      {/* فيديو البداية */}
-      <video
-        src={invitationImg}
-        preload="auto"
-        autoPlay
-        muted
-        loop
-        playsInline
         className="fixed w-px h-px opacity-0 pointer-events-none"
         aria-hidden="true"
       />
@@ -290,9 +307,10 @@ const Index = () => {
       <Envelope
         onOpen={() => {
           musicRef.current?.playMusic();
-          if (invitationVideoRef.current) {
-            invitationVideoRef.current.currentTime = 0;
-            invitationVideoRef.current
+          const preloadVideo = preloadVideoRef.current;
+          if (preloadVideo) {
+            preloadVideo.currentTime = 0;
+            preloadVideo
               .play()
               .catch(() => {});
           }
@@ -346,14 +364,24 @@ const Index = () => {
               <video
                 ref={invitationVideoRef}
                 src={invitationImg}
-                autoPlay
                 muted
                 loop
                 playsInline
                 preload="auto"
+                autoPlay
                 className="absolute inset-0 w-full h-full object-cover animate-videoFade"
                 style={{
                   background: "#F7F5F0",
+                }}
+                onLoadedData={(e) => {
+                  const visibleVideo = e.currentTarget;
+                  const preloadVideo = preloadVideoRef.current;
+                  if (preloadVideo) {
+                    try {
+                      visibleVideo.currentTime =
+                        preloadVideo.currentTime;
+                    } catch {}
+                  }
                 }}
               />
               <div
@@ -430,7 +458,6 @@ const Index = () => {
                     lang === "ar" ? "font-arabic" : ""
                   }`}
                 >
-                  {/* الرقم 2 */}
                   {lang === "ar" && (
                     <div className="flex items-center justify-center my-4">
                       <span
@@ -447,7 +474,6 @@ const Index = () => {
                       </span>
                     </div>
                   )}
-                  {/* السطر الأول */}
                   <div
                     className="font-tajawal text-base sm:text-lg"
                     style={{
@@ -456,7 +482,6 @@ const Index = () => {
                   >
                     {t("invite_join")}
                   </div>
-                  {/* السطر الثاني */}
                   <div
                     className="font-tajawal text-base sm:text-lg"
                     style={{
@@ -465,7 +490,6 @@ const Index = () => {
                   >
                     {t("invite_day")}
                   </div>
-                  {/* تتشرف */}
                   {lang === "ar" && (
                     <div
                       className="font-tajawal text-base sm:text-lg pb-2"
@@ -476,7 +500,6 @@ const Index = () => {
                       {t("invite_with_love")}
                     </div>
                   )}
-                  {/* اسم الأم */}
                   {lang === "ar" && (
                     <div
                       className="flex items-center justify-center gap-1 text-3xl sm:text-4xl font-bold py-2"
@@ -489,7 +512,6 @@ const Index = () => {
                       </span>
                     </div>
                   )}
-                  {/* الدعوة لحضور الزواج */}
                   {lang === "ar" && (
                     <div
                       className="font-tajawal text-base sm:text-lg"
@@ -500,7 +522,6 @@ const Index = () => {
                       {t("invite_attend")}
                     </div>
                   )}
-                  {/* الأسماء */}
                   {lang === "ar" && (
                     <div className="flex items-center justify-center gap-3 mt-2">
                       <div className="flex flex-col items-center">
@@ -550,7 +571,6 @@ const Index = () => {
                       </div>
                     </div>
                   )}
-                  {/* الجملة الأخيرة */}
                   {lang === "ar" && (
                     <div
                       className="font-tajawal text-base sm:text-lg"
@@ -561,7 +581,6 @@ const Index = () => {
                       {t("invite_god_willing")}
                     </div>
                   )}
-                  {/* English */}
                   {lang === "en" && (
                     <>
                       <div
