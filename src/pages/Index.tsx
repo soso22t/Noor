@@ -152,6 +152,7 @@ const Index = () => {
   const [opened, setOpened] = useState(false);
   const { t, lang, toggle } = useLang();
   const musicRef = useRef<MusicToggleRef | null>(null);
+  const invitationVideoRef = useRef<HTMLVideoElement | null>(null);
   const autoScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -243,6 +244,29 @@ const Index = () => {
         minHeight: "100vh",
       }}
     >
+      {/* تحميل فيديو الدعوة من البداية بدون تشغيل */}
+      <video
+        src={invitationImg}
+        preload="auto"
+        muted
+        playsInline
+        className="fixed w-px h-px opacity-0 pointer-events-none"
+        aria-hidden="true"
+      />
+      {/* تحميل الحروف من البداية */}
+      <img
+        src={arabicLetters}
+        alt=""
+        className="fixed w-px h-px opacity-0 pointer-events-none"
+        aria-hidden="true"
+      />
+      <img
+        src={englishLetters}
+        alt=""
+        className="fixed w-px h-px opacity-0 pointer-events-none"
+        aria-hidden="true"
+      />
+      {/* فيديو البداية */}
       <video
         src={invitationImg}
         preload="auto"
@@ -266,6 +290,12 @@ const Index = () => {
       <Envelope
         onOpen={() => {
           musicRef.current?.playMusic();
+          if (invitationVideoRef.current) {
+            invitationVideoRef.current.currentTime = 0;
+            invitationVideoRef.current
+              .play()
+              .catch(() => {});
+          }
           setOpened(true);
         }}
       />
@@ -314,6 +344,7 @@ const Index = () => {
           <section className="flex justify-center relative z-20">
             <div className="relative w-full aspect-[9/16] overflow-hidden">
               <video
+                ref={invitationVideoRef}
                 src={invitationImg}
                 autoPlay
                 muted
