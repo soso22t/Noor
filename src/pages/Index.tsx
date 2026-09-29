@@ -14,36 +14,66 @@ import dividerImg from "@/assets/Photoroom_20260926_153304.png";
 import locationIcon from "@/assets/4.png";
 import flowerDivider from "@/assets/Photoroom_20260803_031459.png";
 import rsvpIcon from "@/assets/Photoroom_20260803_042103.png";
+import arabicLetters from "@/assets/Photoroom_20260929_085710.png";
+import englishLetters from "@/assets/Photoroom_20260929_085731.png";
 import { useLang } from "@/i18n/LanguageContext";
+
 interface EventItem {
   time: string;
-  title: string;
+  titleAr: string;
+  titleEn: string;
 }
+
 const events: EventItem[] = [
-  { time: "4:00 PM", title: "الاستقبال" },
-  { time: "5:30 PM", title: "مراسيم الزفاف" },
-  { time: "7:00 PM", title: "العشاء" },
-  { time: "11:00 PM", title: "الانتهاء" },
+  {
+    time: "4:00 PM",
+    titleAr: "الاستقبال",
+    titleEn: "Reception",
+  },
+  {
+    time: "5:30 PM",
+    titleAr: "مراسيم الزفاف",
+    titleEn: "Wedding Ceremony",
+  },
+  {
+    time: "7:00 PM",
+    titleAr: "العشاء",
+    titleEn: "Dinner",
+  },
+  {
+    time: "11:00 PM",
+    titleAr: "الانتهاء",
+    titleEn: "Celebration Ends",
+  },
 ];
+
 const EventTimeline = () => {
+  const { lang } = useLang();
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
+
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       const start = windowHeight * 0.8;
       const end = windowHeight * 0.2;
       const current = rect.top;
+
       let progress = (start - current) / (start - end);
       progress = Math.max(0, Math.min(1, progress));
+
       setScrollProgress(progress);
     };
+
     window.addEventListener("scroll", handleScroll);
     handleScroll();
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return (
     <div
       ref={containerRef}
@@ -61,13 +91,15 @@ const EventTimeline = () => {
         className="font-arabic text-xl sm:text-2xl font-bold mb-8"
         style={{ color: "#C8A96A" }}
       >
-        برنامج المناسبة
+        {lang === "ar" ? "برنامج المناسبة" : "Wedding Program."}
       </h3>
+
       <div className="relative max-w-xs mx-auto py-2">
         <div
           className="absolute left-1/2 top-3 bottom-3 -translate-x-1/2 w-[2px] opacity-30"
           style={{ backgroundColor: "#C8A96A" }}
         />
+
         <div
           className="absolute left-1/2 top-3 -translate-x-1/2 w-[2.5px] rounded-full transition-all duration-150 ease-out"
           style={{
@@ -76,10 +108,12 @@ const EventTimeline = () => {
             boxShadow: "0 0 10px rgba(200, 169, 106, 0.8)",
           }}
         />
+
         <div className="space-y-12 relative z-10">
           {events.map((event, index) => {
             const threshold = index / (events.length - 1 || 1);
             const isActive = scrollProgress >= threshold - 0.1;
+
             return (
               <div
                 key={index}
@@ -92,8 +126,9 @@ const EventTimeline = () => {
                     opacity: isActive ? 1 : 0,
                   }}
                 >
-                  {event.title}
+                  {lang === "ar" ? event.titleAr : event.titleEn}
                 </div>
+
                 <div className="col-span-1 flex justify-center items-center">
                   <div
                     className="w-4 h-4 rounded-full border-2 transition-all duration-500 ease-out"
@@ -109,6 +144,7 @@ const EventTimeline = () => {
                     }}
                   />
                 </div>
+
                 <div
                   className="col-span-2 text-right pr-2 sm:pr-3 font-display text-xs sm:text-sm font-semibold tracking-wider dir-ltr transition-opacity duration-300"
                   style={{
@@ -126,39 +162,53 @@ const EventTimeline = () => {
     </div>
   );
 };
+
 const Index = () => {
   const [opened, setOpened] = useState(false);
   const { t, lang, toggle } = useLang();
+
   const autoScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
+
   const autoScrollFrameRef = useRef<number | null>(null);
   const autoScrollStoppedRef = useRef(false);
+
   useEffect(() => {
     if (!opened) return;
+
     autoScrollStoppedRef.current = false;
+
     autoScrollTimerRef.current = setTimeout(() => {
       if (autoScrollStoppedRef.current) return;
+
       const startPosition = window.scrollY;
+
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
+
       if (maxScroll <= startPosition) return;
+
       const duration = 20000;
       const startTime = performance.now();
+
       const animateScroll = (currentTime: number) => {
         if (autoScrollStoppedRef.current) return;
+
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        // حركة سلسة وطبيعية
+
         const easedProgress =
           progress < 0.5
             ? 2 * progress * progress
             : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
         window.scrollTo(
           0,
           startPosition +
             (maxScroll - startPosition) * easedProgress
         );
+
         if (progress < 1) {
           autoScrollFrameRef.current =
             requestAnimationFrame(animateScroll);
@@ -166,40 +216,53 @@ const Index = () => {
           autoScrollFrameRef.current = null;
         }
       };
+
       autoScrollFrameRef.current =
         requestAnimationFrame(animateScroll);
     }, 5000);
+
     return () => {
       if (autoScrollTimerRef.current) {
         clearTimeout(autoScrollTimerRef.current);
         autoScrollTimerRef.current = null;
       }
+
       if (autoScrollFrameRef.current) {
         cancelAnimationFrame(autoScrollFrameRef.current);
         autoScrollFrameRef.current = null;
       }
     };
   }, [opened]);
+
   useEffect(() => {
     if (!opened) return;
+
     const stopAutoScroll = () => {
       autoScrollStoppedRef.current = true;
+
       if (autoScrollTimerRef.current) {
         clearTimeout(autoScrollTimerRef.current);
         autoScrollTimerRef.current = null;
       }
+
       if (autoScrollFrameRef.current) {
         cancelAnimationFrame(autoScrollFrameRef.current);
         autoScrollFrameRef.current = null;
       }
     };
+
     window.addEventListener("touchstart", stopAutoScroll, {
       passive: true,
     });
+
     return () => {
       window.removeEventListener("touchstart", stopAutoScroll);
     };
   }, [opened]);
+
+  const lettersImage =
+    lang === "ar" ? arabicLetters : englishLetters;
+
   return (
     <div
       className="overflow-x-hidden w-full"
@@ -220,6 +283,7 @@ const Index = () => {
         className="fixed w-px h-px opacity-0 pointer-events-none"
         aria-hidden="true"
       />
+
       {/* Ornamental gold damask pattern background */}
       <div
         aria-hidden
@@ -229,9 +293,13 @@ const Index = () => {
           backgroundSize: "150px 150px",
         }}
       />
+
       {opened && <SprayParticles />}
-      <MusicToggle active={opened} />
+
+      <MusicToggle active={true} />
+
       <Envelope onOpen={() => setOpened(true)} />
+
       {opened && (
         <main
           className="relative z-10 animate-fadeIn"
@@ -252,23 +320,30 @@ const Index = () => {
               onClick={() => lang !== "en" && toggle()}
               className="px-3 py-1 rounded-lg text-sm font-semibold transition-all"
               style={{
-                background: lang === "en" ? "#C8A96A" : "transparent",
-                color: lang === "en" ? "#FFFFFF" : "#A67C2E",
+                background:
+                  lang === "en" ? "#C8A96A" : "transparent",
+                color:
+                  lang === "en" ? "#FFFFFF" : "#A67C2E",
               }}
             >
               EN
             </button>
+
             <button
               onClick={() => lang !== "ar" && toggle()}
               className="px-3 py-1 rounded-lg text-sm font-semibold transition-all"
               style={{
-                background: lang === "ar" ? "#C8A96A" : "transparent",
-                color: lang === "ar" ? "#FFFFFF" : "#A67C2E",
+                background:
+                  lang === "ar" ? "#C8A96A" : "transparent",
+                color:
+                  lang === "ar" ? "#FFFFFF" : "#A67C2E",
               }}
             >
               AR
             </button>
           </div>
+
+          {/* السلايد الأول */}
           <section className="flex justify-center relative z-20">
             <div className="relative w-full aspect-[9/16] overflow-hidden">
               <video
@@ -283,150 +358,252 @@ const Index = () => {
                   background: "#F7F5F0",
                 }}
               />
+
+              {/* طبقة سوداء خفيفة لإبراز الحروف والتاريخ */}
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                  background: "rgba(0,0,0,0.08)",
+                  background: "rgba(0,0,0,0.14)",
                 }}
               />
+
               <div
                 dir={lang === "ar" ? "rtl" : "ltr"}
-                className="absolute inset-0 flex items-center justify-center px-5 py-6"
+                className="absolute inset-0 flex flex-col items-center justify-end px-5 pb-16"
               >
-                <div className="">
-                  <div
-                    className="flex flex-col items-center text-center px-5 py-6 rounded-2xl w-[98%] sm:w-[92%] gap-4 text-reveal"
+                <div className="flex flex-col items-center justify-center">
+                  <img
+                    src={lettersImage}
+                    alt=""
+                    draggable={false}
+                    className="object-contain select-none"
                     style={{
-                      background: "transparent",
-                      backdropFilter: "none",
-                      WebkitBackdropFilter: "none",
+                      width:
+                        lang === "ar"
+                          ? "72%"
+                          : "68%",
+                      maxWidth: "420px",
+                      maxHeight: "260px",
+                      filter:
+                        "drop-shadow(0 2px 8px rgba(0,0,0,0.55))",
+                    }}
+                  />
+
+                  <div
+                    className={`font-display ${
+                      lang === "ar"
+                        ? "text-2xl sm:text-3xl"
+                        : "text-2xl sm:text-3xl"
+                    } mt-5`}
+                    style={{
                       color: "#FFFFFF",
                       textShadow:
-                        "0 1px 2px hsla(0,0%,0%,0.6), 0 0 10px hsla(0,0%,100%,0.35)",
+                        "0 1px 3px rgba(0,0,0,0.75)",
                     }}
                   >
-                    <div
-                      className={`font-monasabat ${
-                        lang === "ar"
-                          ? "text-[14rem] sm:text-[15rem]"
-                          : "text-xl sm:text-2xl"
-                      } leading-[0.4]`}
-                    >
-                      {t("invite_to")}
-                    </div>
-                    <div
-                      className={`font-tajawal ${
-                        lang === "ar"
-                          ? "text-2xl sm:text-3xl"
-                          : "text-lg sm:text-xl"
-                      } whitespace-nowrap`}
-                    >
-                      {t("invite_join")}
-                    </div>
-                    <div
-                      className={`font-tajawal ${
-                        lang === "ar"
-                          ? "text-2xl sm:text-3xl"
-                          : "text-lg sm:text-xl"
-                      } whitespace-nowrap`}
-                    >
-                      {t("invite_day")}
-                    </div>
-                    <div
-                      className={`font-tajawal ${
-                        lang === "ar"
-                          ? "text-2xl sm:text-3xl"
-                          : "text-lg sm:text-xl"
-                      } whitespace-nowrap`}
-                    >
-                      {t("invite_with_love")}
-                    </div>
-                    <div
-                      className={`font-iran ${
-                        lang === "ar"
-                          ? "text-5xl sm:text-6xl"
-                          : "text-4xl sm:text-5xl"
-                      }`}
-                    >
-                      {t("mother_name1")}
-                    </div>
-                    <div
-                      className={`font-tajawal ${
-                        lang === "ar"
-                          ? "text-2xl sm:text-3xl"
-                          : "text-lg sm:text-xl"
-                      }`}
-                    >
-                      {t("invite_attend")}
-                    </div>
-                    <div
-                      className={`font-iran ${
-                        lang === "ar"
-                          ? "text-6xl sm:text-7xl"
-                          : "text-5xl sm:text-6xl"
-                      } my-6 flex items-center justify-center`}
-                    >
-                      <div className="flex flex-col items-center">
-                        <span>{t("bride_name")}</span>
-                        <span
-                          className={`${
-                            lang === "ar" ? "font-sull" : "font-serif"
-                          }`}
-                          style={{
-                            fontSize: "0.38em",
-                            marginTop: "4px",
-                          }}
-                        >
-                          {t("bride_family_name")}
-                        </span>
-                      </div>
-                      <span
-                        className={lang === "ar" ? "font-sull" : "font-serif"}
-                        style={{
-                          fontSize: "0.65em",
-                          margin: "0 18px",
-                        }}
-                      >
-                        {t("and")}
-                      </span>
-                      <div className="flex flex-col items-center">
-                        <span>{t("groom_name")}</span>
-                        <span
-                          className={`${
-                            lang === "ar" ? "font-sull" : "font-serif"
-                          }`}
-                          style={{
-                            fontSize: "0.38em",
-                            marginTop: "4px",
-                          }}
-                        >
-                          {t("groom_family_name")}
-                        </span>
-                      </div>
-                    </div>
-                    <div
-                      className={`font-tajawal ${
-                        lang === "ar"
-                          ? "text-xl sm:text-2xl"
-                          : "text-base sm:text-lg"
-                      }`}
-                    >
-                      {t("invite_god_willing")}
-                    </div>
-                    <div
-                      className={`font-tajawal ${
-                        lang === "ar"
-                          ? "text-2xl sm:text-3xl"
-                          : "text-lg sm:text-xl"
-                      }`}
-                    >
-                      {t("date_line")}
-                    </div>
+                    26.12.2026
                   </div>
                 </div>
               </div>
             </div>
           </section>
+
+          {/* محتوى الدعوة تحت الفيديو */}
+          <section className="px-4 pt-14 pb-8">
+            <Reveal>
+              <div
+                dir={lang === "ar" ? "rtl" : "ltr"}
+                className="w-[92%] max-w-md p-6 sm:p-8 rounded-3xl text-center relative overflow-hidden my-4 mx-auto"
+                style={{
+                  background: "rgba(255,255,255,0.28)",
+                  border:
+                    "1px solid rgba(255,255,255,0.45)",
+                  boxShadow:
+                    "0 12px 30px rgba(200,169,106,.12)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
+                }}
+              >
+                <div
+                  className={`flex flex-col items-center text-center gap-5 ${
+                    lang === "ar" ? "font-arabic" : ""
+                  }`}
+                >
+                  {/* النص العربي الموجود أصلًا */}
+                  <div
+                    className="font-monasabat text-3xl sm:text-4xl leading-relaxed"
+                    style={{
+                      color: "#A67C2E",
+                    }}
+                  >
+                    {t("invite_to")}
+                  </div>
+
+                  <div
+                    className={`${
+                      lang === "ar"
+                        ? "font-tajawal text-2xl sm:text-3xl"
+                        : "font-tajawal text-lg sm:text-xl"
+                    }`}
+                    style={{
+                      color: "#A67C2E",
+                    }}
+                  >
+                    {lang === "ar"
+                      ? t("invite_join")
+                      : "With hearts full of joy,"}
+                  </div>
+
+                  <div
+                    className={`${
+                      lang === "ar"
+                        ? "font-tajawal text-2xl sm:text-3xl"
+                        : "font-tajawal text-lg sm:text-xl"
+                    }`}
+                    style={{
+                      color: "#A67C2E",
+                    }}
+                  >
+                    {lang === "ar"
+                      ? t("invite_day")
+                      : "we invite you to join us in celebrating the wedding of"}
+                  </div>
+
+                  {lang === "en" && (
+                    <>
+                      <div
+                        className="font-serif text-xl sm:text-2xl"
+                        style={{
+                          color: "#33332B",
+                        }}
+                      >
+                        Mohammed
+                        <span
+                          style={{
+                            display: "inline-block",
+                            margin: "0 18px",
+                            fontSize: "1.15em",
+                          }}
+                        >
+                          &
+                        </span>
+                        Noor
+                      </div>
+
+                      <div
+                        className="font-serif text-base sm:text-lg"
+                        style={{
+                          color: "#A67C2E",
+                        }}
+                      >
+                        Ramadan  Al-Zubiedi
+                      </div>
+                    </>
+                  )}
+
+                  {lang === "ar" && (
+                    <>
+                      <div
+                        className="font-tajawal text-2xl sm:text-3xl"
+                        style={{
+                          color: "#A67C2E",
+                        }}
+                      >
+                        {t("invite_with_love")}
+                      </div>
+
+                      <div
+                        className="font-iran text-5xl sm:text-6xl"
+                        style={{
+                          color: "#33332B",
+                        }}
+                      >
+                        {t("mother_name1")}
+                      </div>
+
+                      <div
+                        className="font-tajawal text-2xl sm:text-3xl"
+                        style={{
+                          color: "#A67C2E",
+                        }}
+                      >
+                        {t("invite_attend")}
+                      </div>
+
+                      <div
+                        className="font-iran text-6xl sm:text-7xl my-2 flex items-center justify-center"
+                        style={{
+                          color: "#33332B",
+                        }}
+                      >
+                        <div className="flex flex-col items-center">
+                          <span>{t("bride_name")}</span>
+
+                          <span
+                            className="font-sull"
+                            style={{
+                              fontSize: "0.38em",
+                              marginTop: "4px",
+                              color: "#A67C2E",
+                            }}
+                          >
+                            {t("bride_family_name")}
+                          </span>
+                        </div>
+
+                        <span
+                          className="font-sull"
+                          style={{
+                            fontSize: "0.65em",
+                            margin: "0 18px",
+                            color: "#A67C2E",
+                          }}
+                        >
+                          {t("and")}
+                        </span>
+
+                        <div className="flex flex-col items-center">
+                          <span>{t("groom_name")}</span>
+
+                          <span
+                            className="font-sull"
+                            style={{
+                              fontSize: "0.38em",
+                              marginTop: "4px",
+                              color: "#A67C2E",
+                            }}
+                          >
+                            {t("groom_family_name")}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div
+                        className="font-tajawal text-xl sm:text-2xl"
+                        style={{
+                          color: "#A67C2E",
+                        }}
+                      >
+                        {t("invite_god_willing")}
+                      </div>
+                    </>
+                  )}
+
+                  {lang === "en" && (
+                    <div
+                      className="font-serif text-base sm:text-lg leading-relaxed"
+                      style={{
+                        color: "#A67C2E",
+                      }}
+                    >
+                      We look forward to sharing this special day with you.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Reveal>
+          </section>
+
           {/* Countdown */}
           <section className="px-4 py-16">
             <Reveal>
@@ -436,17 +613,22 @@ const Index = () => {
               >
                 {t("countdown_date")}
               </p>
+
               <h2
                 className="text-center font-arabic text-3xl mb-10"
                 style={{ color: "#A67C2E" }}
               >
-                {t("countdown_title")}
+                {lang === "ar"
+                  ? t("countdown_title")
+                  : "Wedding Countdown."}
               </h2>
             </Reveal>
+
             <Reveal delay={150}>
               <Countdown />
             </Reveal>
           </section>
+
           <section className="-mx-4 py-8">
             <img
               src={dividerImg}
@@ -454,6 +636,8 @@ const Index = () => {
               className="block w-full h-auto"
             />
           </section>
+
+          {/* Venue */}
           <section className="px-4 py-16">
             <Reveal>
               <div className="text-center mb-8">
@@ -462,18 +646,25 @@ const Index = () => {
                   alt=""
                   className="mx-auto mb-4 w-14 h-auto"
                 />
+
                 <h2
                   className="font-arabic text-3xl"
                   style={{ color: "#A67C2E" }}
                 >
-                  {t("details_title")}
+                  {lang === "ar"
+                    ? t("details_title")
+                    : "Venue."}
                 </h2>
-                <div
-                  className="font-arabic text-sm mt-2"
-                  style={{ color: "#7C7367" }}
-                >
-                  {t("details_subtitle")}
-                </div>
+
+                {lang === "ar" && (
+                  <div
+                    className="font-arabic text-sm mt-2"
+                    style={{ color: "#7C7367" }}
+                  >
+                    {t("details_subtitle")}
+                  </div>
+                )}
+
                 <img
                   src={flowerDivider}
                   alt=""
@@ -482,6 +673,7 @@ const Index = () => {
                 />
               </div>
             </Reveal>
+
             <Reveal delay={200}>
               <div
                 style={{
@@ -494,7 +686,8 @@ const Index = () => {
                   style={{
                     background: "#FFFFFF",
                     border: "1px solid #E7D8B7",
-                    boxShadow: "0 12px 30px rgba(200,169,106,.12)",
+                    boxShadow:
+                      "0 12px 30px rgba(200,169,106,.12)",
                   }}
                 >
                   <div className="flex flex-col items-center justify-center gap-1 mb-4">
@@ -504,6 +697,7 @@ const Index = () => {
                         alt=""
                         className="w-7 h-7"
                       />
+
                       <span
                         className="font-arabic text-sm"
                         style={{
@@ -514,6 +708,7 @@ const Index = () => {
                         {t("hall_name")}
                       </span>
                     </div>
+
                     <div
                       className="font-arabic text-sm"
                       style={{
@@ -523,6 +718,7 @@ const Index = () => {
                       {t("venue_city")}
                     </div>
                   </div>
+
                   <iframe
                     title={t("map_title")}
                     src="https://www.google.com/maps?q=Sapphire+Addis+Hotel,+Namibia+St,+Addis+Ababa,+Ethiopia&output=embed"
@@ -534,6 +730,7 @@ const Index = () => {
                       borderRadius: "16px",
                     }}
                   />
+
                   <div
                     className="text-center mt-4 font-arabic"
                     style={{
@@ -544,20 +741,27 @@ const Index = () => {
                   >
                     {t("hall_city")}
                   </div>
+
                   {t("arrival_time").trim() && (
                     <div className="hidden items-center justify-center gap-2 mt-3 mb-5">
                       <Clock
                         className="w-4 h-4"
-                        style={{ color: "#687451" }}
+                        style={{
+                          color: "#687451",
+                        }}
                       />
+
                       <span
                         className="font-arabic text-sm"
-                        style={{ color: "#394132" }}
+                        style={{
+                          color: "#394132",
+                        }}
                       >
                         {t("arrival_time")}
                       </span>
                     </div>
                   )}
+
                   <div className="grid grid-cols-2 gap-3">
                     <a
                       href="https://maps.app.goo.gl/HLfudh8kqaeihyzU6?g_st=ic"
@@ -574,6 +778,7 @@ const Index = () => {
                     >
                       {t("open_map")}
                     </a>
+
                     <a
                       href="/event.ics"
                       className="py-3 rounded-xl text-center font-arabic text-sm"
@@ -594,10 +799,12 @@ const Index = () => {
               </div>
             </Reveal>
           </section>
-          {/* Details */}
+
+          {/* Details / Wedding Program */}
           <section className="px-4 py-16">
             <EventTimeline />
           </section>
+
           {/* RSVP */}
           <section className="px-4 py-16">
             <Reveal>
@@ -608,12 +815,14 @@ const Index = () => {
                   className="mx-auto mb-5 w-28 h-auto select-none"
                   draggable={false}
                 />
+
                 <h2
                   className="font-arabic text-3xl"
                   style={{ color: "#A67C2E" }}
                 >
                   {t("rsvp_title")}
                 </h2>
+
                 <div
                   className="font-arabic text-sm mt-2"
                   style={{ color: "#7B8470" }}
@@ -622,8 +831,10 @@ const Index = () => {
                 </div>
               </div>
             </Reveal>
+
             <RSVP />
           </section>
+
           {/* Footer */}
           <footer className="px-4 py-12 text-center">
             <Reveal>
@@ -635,17 +846,22 @@ const Index = () => {
                   <span className="font-iran">
                     {t("designer_name1")}
                   </span>
+
                   <span
                     className={`${
-                      lang === "ar" ? "font-sull" : "font-sans"
+                      lang === "ar"
+                        ? "font-sull"
+                        : "font-sans"
                     }`}
                   >
                     {t("designer_and")}
                   </span>
+
                   <span className="font-iran">
                     {t("designer_name2")}
                   </span>
                 </div>
+
                 <a
                   href="https://www.tiktok.com/@shim2t?_r=1&_t=ZS-95w0d8f7vnk"
                   target="_blank"
@@ -659,6 +875,7 @@ const Index = () => {
                       alt="Gaim Store Icon"
                       className="w-4 h-4"
                     />
+
                     <span
                       className="font-arabic text-base"
                       style={{
@@ -669,11 +886,13 @@ const Index = () => {
                       {t("store")}
                     </span>
                   </div>
+
                   <span
                     className="mt-0.5 text-xs inline-flex items-center gap-1"
                     style={{ color: "#7C7367" }}
                   >
                     TikTok @shim2t
+
                     <svg
                       className="w-3 h-3"
                       fill="none"
@@ -686,7 +905,7 @@ const Index = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         d="M7 17L17 7M17 7H7M17 7v10"
-                      ></path>
+                      />
                     </svg>
                   </span>
                 </a>
@@ -698,4 +917,5 @@ const Index = () => {
     </div>
   );
 };
+
 export default Index;
