@@ -219,7 +219,7 @@ const Index = () => {
 
       autoScrollFrameRef.current =
         requestAnimationFrame(animateScroll);
-    }, 5000);
+    }, 3000);
 
     return () => {
       if (autoScrollTimerRef.current) {
