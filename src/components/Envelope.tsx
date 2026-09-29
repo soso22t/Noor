@@ -13,9 +13,33 @@ const Envelope = ({ onOpen }: EnvelopeProps) => {
 
   useEffect(() => {
     const video = videoRef.current;
+
     if (video) {
+      video.preload = "auto";
       video.load();
-      video.currentTime = 0;
+
+      const prepareFirstFrame = () => {
+        try {
+          video.currentTime = 0;
+        } catch {}
+      };
+
+      if (video.readyState >= 2) {
+        prepareFirstFrame();
+      } else {
+        video.addEventListener(
+          "loadeddata",
+          prepareFirstFrame,
+          { once: true }
+        );
+      }
+
+      return () => {
+        video.removeEventListener(
+          "loadeddata",
+          prepareFirstFrame
+        );
+      };
     }
   }, []);
 
@@ -28,7 +52,10 @@ const Envelope = ({ onOpen }: EnvelopeProps) => {
 
     if (video) {
       video.currentTime = 0;
-      await video.play();
+
+      try {
+        await video.play();
+      } catch {}
     }
   };
 
@@ -57,7 +84,9 @@ const Envelope = ({ onOpen }: EnvelopeProps) => {
         playsInline
         preload="auto"
         onLoadedData={(e) => {
-          e.currentTarget.currentTime = 0;
+          try {
+            e.currentTarget.currentTime = 0;
+          } catch {}
         }}
         onEnded={handleEnded}
         className="w-full h-full object-cover"
@@ -67,7 +96,7 @@ const Envelope = ({ onOpen }: EnvelopeProps) => {
         <div
           className="absolute bottom-10 left-1/2 -translate-x-1/2 text-sm font-arabic animate-pulse z-10"
           style={{
-            color: "white",
+            color: "#A67C2E",
             textShadow: "0 2px 8px rgba(0,0,0,.8)",
           }}
         >
