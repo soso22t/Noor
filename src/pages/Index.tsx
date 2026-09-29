@@ -274,7 +274,6 @@ const Index = () => {
         minHeight: "100vh",
       }}
     >
-      {/* تحميل الفيديو من أول دخول الموقع */}
       <video
         src={invitationImg}
         preload="auto"
@@ -284,7 +283,6 @@ const Index = () => {
         aria-hidden="true"
       />
 
-      {/* Ornamental gold damask pattern background */}
       <div
         aria-hidden
         className="hidden"
@@ -359,7 +357,6 @@ const Index = () => {
                 }}
               />
 
-              {/* طبقة سوداء خفيفة لإبراز الحروف والتاريخ */}
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
@@ -429,60 +426,187 @@ const Index = () => {
                     lang === "ar" ? "font-arabic" : ""
                   }`}
                 >
-                  {/* النص العربي الموجود أصلًا */}
+                  {/* الرقم 2 */}
+                  {lang === "ar" && (
+                    <div className="flex items-center justify-center my-4">
+                      <span
+                        className="inline-block text-6xl sm:text-7xl font-normal leading-none select-none"
+                        style={{
+                          fontFamily: "'Monasabat', sans-serif",
+                          color: "#A67C2E",
+                          transform: "scale(3.4)",
+                          transformOrigin: "center",
+                          textRendering: "geometricPrecision",
+                        }}
+                      >
+                        {t("invite_to")}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* السطر الأول */}
                   <div
-                    className="font-monasabat text-3xl sm:text-4xl leading-relaxed"
+                    className="font-tajawal text-base sm:text-lg"
                     style={{
-                      color: "#A67C2E",
+                      color: "#8A7457",
                     }}
                   >
-                    {t("invite_to")}
+                    {t("invite_join")}
                   </div>
 
+                  {/* السطر الثاني */}
                   <div
-                    className={`${
-                      lang === "ar"
-                        ? "font-tajawal text-2xl sm:text-3xl"
-                        : "font-tajawal text-lg sm:text-xl"
-                    }`}
+                    className="font-tajawal text-base sm:text-lg"
                     style={{
-                      color: "#A67C2E",
+                      color: "#8A7457",
                     }}
                   >
-                    {lang === "ar"
-                      ? t("invite_join")
-                      : "With hearts full of joy,"}
+                    {t("invite_day")}
                   </div>
 
-                  <div
-                    className={`${
-                      lang === "ar"
-                        ? "font-tajawal text-2xl sm:text-3xl"
-                        : "font-tajawal text-lg sm:text-xl"
-                    }`}
-                    style={{
-                      color: "#A67C2E",
-                    }}
-                  >
-                    {lang === "ar"
-                      ? t("invite_day")
-                      : "we invite you to join us in celebrating the wedding of"}
-                  </div>
+                  {/* تتشرف */}
+                  {lang === "ar" && (
+                    <div
+                      className="font-tajawal text-base sm:text-lg pb-2"
+                      style={{
+                        color: "#8A7457",
+                      }}
+                    >
+                      {t("invite_with_love")}
+                    </div>
+                  )}
 
+                  {/* اسم الأم */}
+                  {lang === "ar" && (
+                    <div
+                      className="flex items-center justify-center gap-1 text-3xl sm:text-4xl font-bold py-2"
+                      style={{
+                        color: "#A67C2E",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "'IranNastaliq', sans-serif",
+                        }}
+                      >
+                        {t("mother_name1")}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* الدعوة لحضور الزواج */}
+                  {lang === "ar" && (
+                    <div
+                      className="font-tajawal text-base sm:text-lg"
+                      style={{
+                        color: "#8A7457",
+                      }}
+                    >
+                      {t("invite_attend")}
+                    </div>
+                  )}
+
+                  {/* الأسماء */}
+                  {lang === "ar" && (
+                    <div className="flex items-center justify-center gap-3 mt-2">
+                      <div className="flex flex-col items-center">
+                        <span
+                          className="font-iran text-5xl sm:text-6xl"
+                          style={{
+                            color: "#A67C2E",
+                          }}
+                        >
+                          {t("bride_name")}
+                        </span>
+
+                        <span
+                          className="font-sull text-base sm:text-lg"
+                          style={{
+                            color: "#8A7457",
+                          }}
+                        >
+                          {t("bride_family_name")}
+                        </span>
+                      </div>
+
+                      <span
+                        className="font-sull"
+                        style={{
+                          fontSize: "1.2em",
+                          color: "#A67C2E",
+                        }}
+                      >
+                        {t("and")}
+                      </span>
+
+                      <div className="flex flex-col items-center">
+                        <span
+                          className="font-iran text-5xl sm:text-6xl"
+                          style={{
+                            color: "#A67C2E",
+                          }}
+                        >
+                          {t("groom_name")}
+                        </span>
+
+                        <span
+                          className="font-sull text-base sm:text-lg"
+                          style={{
+                            color: "#8A7457",
+                          }}
+                        >
+                          {t("groom_family_name")}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* الجملة الأخيرة */}
+                  {lang === "ar" && (
+                    <div
+                      className="font-tajawal text-base sm:text-lg"
+                      style={{
+                        color: "#8A7457",
+                      }}
+                    >
+                      {t("invite_god_willing")}
+                    </div>
+                  )}
+
+                  {/* English */}
                   {lang === "en" && (
                     <>
                       <div
-                        className="font-serif text-xl sm:text-2xl"
+                        className="font-serif text-base sm:text-lg"
                         style={{
-                          color: "#33332B",
+                          color: "#8A7457",
+                        }}
+                      >
+                        With hearts full of joy,
+                      </div>
+
+                      <div
+                        className="font-serif text-base sm:text-lg"
+                        style={{
+                          color: "#8A7457",
+                        }}
+                      >
+                        we invite you to join us in celebrating the wedding
+                        of
+                      </div>
+
+                      <div
+                        className="font-serif text-5xl sm:text-6xl"
+                        style={{
+                          color: "#A67C2E",
                         }}
                       >
                         Mohammed
                         <span
                           style={{
                             display: "inline-block",
-                            margin: "0 18px",
-                            fontSize: "1.15em",
+                            margin: "0 14px",
+                            fontSize: "0.8em",
                           }}
                         >
                           &
@@ -493,111 +617,21 @@ const Index = () => {
                       <div
                         className="font-serif text-base sm:text-lg"
                         style={{
-                          color: "#A67C2E",
+                          color: "#8A7457",
                         }}
                       >
                         Ramadan  Al-Zubiedi
                       </div>
-                    </>
-                  )}
-
-                  {lang === "ar" && (
-                    <>
-                      <div
-                        className="font-tajawal text-2xl sm:text-3xl"
-                        style={{
-                          color: "#A67C2E",
-                        }}
-                      >
-                        {t("invite_with_love")}
-                      </div>
 
                       <div
-                        className="font-iran text-5xl sm:text-6xl"
+                        className="font-serif text-base sm:text-lg leading-relaxed"
                         style={{
-                          color: "#33332B",
+                          color: "#8A7457",
                         }}
                       >
-                        {t("mother_name1")}
-                      </div>
-
-                      <div
-                        className="font-tajawal text-2xl sm:text-3xl"
-                        style={{
-                          color: "#A67C2E",
-                        }}
-                      >
-                        {t("invite_attend")}
-                      </div>
-
-                      <div
-                        className="font-iran text-6xl sm:text-7xl my-2 flex items-center justify-center"
-                        style={{
-                          color: "#33332B",
-                        }}
-                      >
-                        <div className="flex flex-col items-center">
-                          <span>{t("bride_name")}</span>
-
-                          <span
-                            className="font-sull"
-                            style={{
-                              fontSize: "0.38em",
-                              marginTop: "4px",
-                              color: "#A67C2E",
-                            }}
-                          >
-                            {t("bride_family_name")}
-                          </span>
-                        </div>
-
-                        <span
-                          className="font-sull"
-                          style={{
-                            fontSize: "0.65em",
-                            margin: "0 18px",
-                            color: "#A67C2E",
-                          }}
-                        >
-                          {t("and")}
-                        </span>
-
-                        <div className="flex flex-col items-center">
-                          <span>{t("groom_name")}</span>
-
-                          <span
-                            className="font-sull"
-                            style={{
-                              fontSize: "0.38em",
-                              marginTop: "4px",
-                              color: "#A67C2E",
-                            }}
-                          >
-                            {t("groom_family_name")}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div
-                        className="font-tajawal text-xl sm:text-2xl"
-                        style={{
-                          color: "#A67C2E",
-                        }}
-                      >
-                        {t("invite_god_willing")}
+                        We look forward to sharing this special day with you.
                       </div>
                     </>
-                  )}
-
-                  {lang === "en" && (
-                    <div
-                      className="font-serif text-base sm:text-lg leading-relaxed"
-                      style={{
-                        color: "#A67C2E",
-                      }}
-                    >
-                      We look forward to sharing this special day with you.
-                    </div>
                   )}
                 </div>
               </div>
