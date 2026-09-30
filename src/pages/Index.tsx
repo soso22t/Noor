@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { MapPin, Heart, QrCode, Baby, Camera, Clock } from "lucide-react";
-import invitationImg from "@/assets/Wp.mp4";
+import invitationImg from "@/assets/Rp.mp4";
 import Envelope from "@/components/Envelope";
 import SprayParticles from "@/components/SprayParticles";
 import Reveal from "@/components/Reveal";
@@ -19,11 +19,13 @@ import rsvpIcon from "@/assets/Photoroom_20260803_042103.png";
 import arabicLetters from "@/assets/Photoroom_20260929_085710.png";
 import englishLetters from "@/assets/Photoroom_20260929_085731.png";
 import { useLang } from "@/i18n/LanguageContext";
+
 interface EventItem {
   time: string;
   titleAr: string;
   titleEn: string;
 }
+
 const events: EventItem[] = [
   {
     time: "4:00 PM",
@@ -46,10 +48,12 @@ const events: EventItem[] = [
     titleEn: "Celebration Ends",
   },
 ];
+
 const EventTimeline = () => {
   const { lang } = useLang();
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -66,6 +70,7 @@ const EventTimeline = () => {
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return (
     <div
       ref={containerRef}
@@ -148,6 +153,7 @@ const EventTimeline = () => {
     </div>
   );
 };
+
 const Index = () => {
   const [opened, setOpened] = useState(false);
   const { t, lang, toggle } = useLang();
@@ -159,6 +165,7 @@ const Index = () => {
   );
   const autoScrollFrameRef = useRef<number | null>(null);
   const autoScrollStoppedRef = useRef(false);
+
   useEffect(() => {
     const video = preloadVideoRef.current;
     if (!video) return;
@@ -180,6 +187,7 @@ const Index = () => {
       video.removeEventListener("loadeddata", prepareFirstFrame);
     };
   }, []);
+
   useEffect(() => {
     if (!opened) return;
     autoScrollStoppedRef.current = false;
@@ -253,8 +261,10 @@ const Index = () => {
       window.removeEventListener("keydown", handleUserInteraction);
     };
   }, [opened]);
-  const lettersImage =
-    lang === "ar" ? arabicLetters : englishLetters;
+
+  // إبقاء المخطوطة العربية دائماً لإلغاء ترجمتها بالإنجليزية
+  const lettersImage = arabicLetters;
+
   return (
     <div
       className="overflow-x-hidden w-full"
@@ -601,33 +611,42 @@ const Index = () => {
                         of
                       </div>
                       <div
-                        className="font-serif text-5xl sm:text-6xl"
+                        className="font-serif flex flex-col items-center justify-center my-3"
                         style={{
                           color: "#A67C2E",
                         }}
                       >
-                        Mohammed
+                        <span className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-normal">
+                          MOHAMMED
+                        </span>
                         <span
+                          className="italic font-serif text-4xl sm:text-5xl my-1"
                           style={{
-                            display: "inline-block",
-                            margin: "0 14px",
-                            fontSize: "0.8em",
+                            fontFamily: "Georgia, 'Times New Roman', serif",
+                            color: "#A67C2E",
                           }}
                         >
                           &
                         </span>
-                        Noor
+                        <span className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-normal">
+                          NOOR
+                        </span>
                       </div>
                       <div
-                        className="font-serif text-base sm:text-lg"
+                        className="font-serif text-xs sm:text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-3 my-1"
                         style={{
                           color: "#8A7457",
                         }}
                       >
-                        Ramadan  Al-Zubiedi
+                        <span>RAMADAN</span>
+                        <span
+                          className="inline-block w-[1px] h-4"
+                          style={{ backgroundColor: "#A67C2E" }}
+                        />
+                        <span>AL-ZUBIEDI</span>
                       </div>
                       <div
-                        className="font-serif text-base sm:text-lg leading-relaxed"
+                        className="font-serif text-base sm:text-lg leading-relaxed mt-2"
                         style={{
                           color: "#8A7457",
                         }}
@@ -925,4 +944,5 @@ const Index = () => {
     </div>
   );
 };
+
 export default Index;
