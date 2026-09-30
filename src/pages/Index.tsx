@@ -236,10 +236,12 @@ const Index = () => {
   const autoScrollStoppedRef = useRef(false);
 
   useEffect(() => {
-    // التأكد من تشغيل الفيديو فور تحميل المكون
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
+    const video = videoRef.current;
+    if (!video) return;
+
+    // تشغيل الفيديو وتعيين الوقت المبدئي على الإطار الأول
+    video.currentTime = 0;
+    video.play().catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -415,13 +417,13 @@ const Index = () => {
             </button>
           </div>
 
-          {/* السلايد الأول: يحوي المخطوطات والطبقة الشفافة مع استغلال الفيديو الثابت كخلفية له */}
+          {/* السلايد الأول */}
           <section className="flex justify-center relative z-20">
             <div className="relative w-full aspect-[9/16] overflow-hidden">
-              {/* فيديو مفرد مستمر دون إعادة تحميل */}
+              {/* فيديو مفرد يحافظ على الإطار الأول فورياً */}
               <video
                 ref={videoRef}
-                src={invitationImg}
+                src={`${invitationImg}#t=0.001`}
                 preload="auto"
                 muted
                 playsInline
@@ -429,7 +431,7 @@ const Index = () => {
                 loop
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                 style={{
-                  background: "#F7F5F0",
+                  backgroundColor: "#F7F5F0",
                 }}
               />
 
