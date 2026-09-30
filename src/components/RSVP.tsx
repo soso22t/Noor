@@ -2,20 +2,25 @@ import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
 import Reveal from "./Reveal";
 import { useLang } from "@/i18n/LanguageContext";
+
 type State =
   | { kind: "form" }
   | { kind: "loading" }
   | { kind: "success"; name: string; status: "confirmed" | "declined" }
   | { kind: "error"; msg: string };
+
 const RSVP = () => {
   const { t, lang } = useLang();
   const [name, setName] = useState("");
   const [status, setStatus] = useState<"confirmed" | "declined" | "">("");
   const [state, setState] = useState<State>({ kind: "form" });
+
   useEffect(() => {
     const savedSubmission = localStorage.getItem("guest_message_sent");
+
     if (savedSubmission) {
       const data = JSON.parse(savedSubmission);
+
       setState({
         kind: "success",
         name: data.name,
@@ -23,12 +28,15 @@ const RSVP = () => {
       });
     }
   }, []);
+
   const submit = async () => {
     if (!name.trim() || !status) return;
+
     setState({ kind: "loading" });
+
     try {
       await fetch(
-        "https://docs.google.com/forms/d/e/1FAIpQLSdKN7zeV3SoXNisF2gEw5X7JIEkUN5ETn7PJcAq2aP85G50OQ/formResponse",
+        "https://docs.google.com/forms/d/e/1FAIpQLSehv3A0d7v7nyeZ2U5F3zh9t1xOpB9WiruZbvjVGqX5wnw0Tw/formResponse",
         {
           method: "POST",
           mode: "no-cors",
@@ -36,10 +44,10 @@ const RSVP = () => {
             "Content-Type": "application/x-www-form-urlencoded",
           },
           body: new URLSearchParams({
-            "entry.280584690": name.trim(),
-            "entry.196820683":
+            "entry.1724164538": name.trim(),
+            "entry.1559009780":
               status === "confirmed"
-                ? "تأكيد الحضور"
+                ? "تاكيد الحضور"
                 : "الاعتذار عن الحضور",
           }),
         }
@@ -51,6 +59,7 @@ const RSVP = () => {
       });
       return;
     }
+
     localStorage.setItem(
       "guest_message_sent",
       JSON.stringify({
@@ -58,12 +67,14 @@ const RSVP = () => {
         status,
       })
     );
+
     setState({
       kind: "success",
       name: name.trim(),
       status,
     });
   };
+
   // ===== Render states =====
   if (state.kind === "success") {
     return (
@@ -83,31 +94,33 @@ const RSVP = () => {
               fill: "#A67C2E",
             }}
           />
+
           {state.status === "confirmed" ? (
             <>
               <div
                 className="font-arabic text-2xl mb-4"
                 style={{
                   color: "#2F2A24",
-                  fontWeight: 700,
+                  fontWeight: 400,
                 }}
               >
-                أهلًا وسهلًا
+                {t("welcome")}
               </div>
+
               <p
                 className="font-arabic text-xl leading-loose"
-                style={{ color: "#2F2A24" }}
+                style={{ color: "#2F2A24", fontWeight: 400 }}
               >
                 <span
                   style={{
                     color: "#A67C2E",
-                    fontWeight: 700,
+                    fontWeight: 400,
                   }}
                 >
                   {state.name}
                 </span>
                 <br />
-                يشرفنا حضورك
+                {t("thanks_attending")}
               </p>
             </>
           ) : (
@@ -116,24 +129,20 @@ const RSVP = () => {
                 className="font-arabic text-2xl mb-4"
                 style={{
                   color: "#2F2A24",
-                  fontWeight: 700,
+                  fontWeight: 400,
                 }}
               >
-                نقدر اعتذارك
+                {t("thanks_declined")}
               </div>
+
               <p
                 className="font-arabic text-xl leading-loose"
-                style={{ color: "#2F2A24" }}
+                style={{
+                  color: "#2F2A24",
+                  fontWeight: 400,
+                }}
               >
-                يا{" "}
-                <span
-                  style={{
-                    color: "#A67C2E",
-                    fontWeight: 700,
-                  }}
-                >
-                  {state.name}
-                </span>
+                {state.name}
               </p>
             </>
           )}
@@ -141,6 +150,7 @@ const RSVP = () => {
       </Reveal>
     );
   }
+
   // Form
   return (
     <Reveal>
@@ -156,25 +166,31 @@ const RSVP = () => {
         <div className="mb-5 text-right">
           <label
             className="block font-arabic text-sm mb-2"
-            style={{ color: "#2F2A24" }}
+            style={{
+              color: "#2F2A24",
+              fontWeight: 400,
+            }}
           >
-            الاسم الكريم
+            {t("name_label")}
           </label>
+
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             maxLength={60}
-            placeholder="اكتب اسمك الكريم"
+            placeholder={t("name_placeholder")}
             className="w-full px-4 py-3 rounded-xl font-arabic text-right outline-none transition-all focus:border-[#A67C2E]"
             style={{
               background: "#FCFBF8",
               border: "1px solid #E7D8B7",
               color: "#2F2A24",
+              fontWeight: 400,
             }}
             dir={lang === "ar" ? "rtl" : "ltr"}
           />
         </div>
+
         {/* حالة الحضور */}
         <div className="mb-5 grid grid-cols-2 gap-3">
           <button
@@ -187,11 +203,12 @@ const RSVP = () => {
               color:
                 status === "confirmed" ? "#FFFFFF" : "#2F2A24",
               border: "1px solid #E7D8B7",
-              fontWeight: 600,
+              fontWeight: 400,
             }}
           >
-            تأكيد الحضور
+            {t("confirm_attendance")}
           </button>
+
           <button
             type="button"
             onClick={() => setStatus("declined")}
@@ -202,12 +219,13 @@ const RSVP = () => {
               color:
                 status === "declined" ? "#FFFFFF" : "#2F2A24",
               border: "1px solid #E7D8B7",
-              fontWeight: 600,
+              fontWeight: 400,
             }}
           >
-            الاعتذار عن الحضور
+            {t("decline_attendance")}
           </button>
         </div>
+
         {/* زر الإرسال */}
         <button
           onClick={submit}
@@ -221,15 +239,21 @@ const RSVP = () => {
             background: "#C8A96A",
             color: "#FFFFFF",
             boxShadow: "0 4px 18px rgba(200,169,106,.2)",
-            fontWeight: 700,
+            fontWeight: 400,
           }}
         >
-          {state.kind === "loading" ? "جاري الإرسال..." : "إرسال"}
+          {state.kind === "loading"
+            ? t("sending")
+            : t("send_message")}
         </button>
+
         {state.kind === "error" && (
           <p
             className="font-arabic text-sm text-center mt-3"
-            style={{ color: "hsl(0 70% 45%)" }}
+            style={{
+              color: "hsl(0 70% 45%)",
+              fontWeight: 400,
+            }}
           >
             {state.msg}
           </p>
@@ -238,4 +262,5 @@ const RSVP = () => {
     </Reveal>
   );
 };
+
 export default RSVP;
