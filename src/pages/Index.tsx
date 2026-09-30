@@ -16,8 +16,8 @@ import dividerImg from "@/assets/Photoroom_20260926_153304.png";
 import locationIcon from "@/assets/4.png";
 import flowerDivider from "@/assets/Photoroom_20260803_031459.png";
 import rsvpIcon from "@/assets/Photoroom_20260803_042103.png";
-import arabicLetters from "@/assets/Photoroom_20260929_085710.png";
-import englishLetters from "@/assets/Photoroom_20260929_085731.png";
+import arabicLetters from "@/assets/Anx.png";
+import englishLetters from "@/assets/Ann.png";
 import { useLang } from "@/i18n/LanguageContext";
 
 interface EventItem {
@@ -239,13 +239,16 @@ const Index = () => {
   useEffect(() => {
     const video = preloadVideoRef.current;
     if (!video) return;
+
     video.preload = "auto";
     video.load();
+
     const prepareFirstFrame = () => {
       try {
         video.currentTime = 0;
       } catch {}
     };
+
     if (video.readyState >= 2) {
       prepareFirstFrame();
     } else {
@@ -253,6 +256,7 @@ const Index = () => {
         once: true,
       });
     }
+
     return () => {
       video.removeEventListener("loadeddata", prepareFirstFrame);
     };
@@ -260,19 +264,24 @@ const Index = () => {
 
   useEffect(() => {
     if (!opened) return;
+
     autoScrollStoppedRef.current = false;
     let animationFrameId: number;
+
     const handleUserInteraction = () => {
       autoScrollStoppedRef.current = true;
+
       if (autoScrollTimerRef.current) {
         clearTimeout(autoScrollTimerRef.current);
         autoScrollTimerRef.current = null;
       }
+
       if (autoScrollFrameRef.current) {
         cancelAnimationFrame(autoScrollFrameRef.current);
         autoScrollFrameRef.current = null;
       }
     };
+
     window.addEventListener("touchstart", handleUserInteraction, {
       passive: true,
     });
@@ -285,24 +294,32 @@ const Index = () => {
     window.addEventListener("keydown", handleUserInteraction, {
       passive: true,
     });
+
     autoScrollTimerRef.current = setTimeout(() => {
       if (autoScrollStoppedRef.current) return;
+
       const startPosition = window.pageYOffset;
       const targetPosition =
         document.documentElement.scrollHeight - window.innerHeight;
       const distance = targetPosition - startPosition;
+
       if (distance <= 0) return;
+
       const duration = 40000;
       const startTime = Date.now();
+
       const animation = () => {
         if (autoScrollStoppedRef.current) return;
+
         const elapsed = Date.now() - startTime;
         const progress = Math.min(elapsed / duration, 1);
         const run = startPosition + distance * progress;
+
         window.scrollTo({
           top: run,
           behavior: "instant",
         });
+
         if (progress < 1) {
           animationFrameId = requestAnimationFrame(animation);
           autoScrollFrameRef.current = animationFrameId;
@@ -310,21 +327,26 @@ const Index = () => {
           autoScrollFrameRef.current = null;
         }
       };
+
       animationFrameId = requestAnimationFrame(animation);
       autoScrollFrameRef.current = animationFrameId;
     }, 2500);
+
     return () => {
       if (autoScrollTimerRef.current) {
         clearTimeout(autoScrollTimerRef.current);
         autoScrollTimerRef.current = null;
       }
+
       if (autoScrollFrameRef.current) {
         cancelAnimationFrame(autoScrollFrameRef.current);
         autoScrollFrameRef.current = null;
       }
+
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
+
       window.removeEventListener("touchstart", handleUserInteraction);
       window.removeEventListener("wheel", handleUserInteraction);
       window.removeEventListener("mousedown", handleUserInteraction);
@@ -332,8 +354,8 @@ const Index = () => {
     };
   }, [opened]);
 
-  // إبقاء المخطوطة العربية دائماً لإلغاء ترجمتها بالإنجليزية
-  const lettersImage = arabicLetters;
+  const lettersImage =
+    lang === "ar" ? arabicLetters : englishLetters;
 
   return (
     <div
@@ -346,14 +368,22 @@ const Index = () => {
         minHeight: "100vh",
       }}
     >
-      {/* تحميل وتجهيز أول فريم من فيديو الدعوة من البداية بدون تشغيل */}
+      {/* فيديو الدعوة موجود ومحمل من البداية تحت الظرف */}
       <video
         ref={preloadVideoRef}
         src={invitationImg}
         preload="auto"
         muted
         playsInline
-        className="fixed w-px h-px opacity-0 pointer-events-none"
+        autoPlay
+        loop
+        className="fixed inset-0 w-full h-full object-cover pointer-events-none"
+        style={{
+          zIndex: opened ? 0 : 1,
+          opacity: opened ? 0 : 1,
+          background: "#F7F5F0",
+          transition: "opacity 0.3s ease",
+        }}
         aria-hidden="true"
         onLoadedData={(e) => {
           try {
@@ -361,6 +391,7 @@ const Index = () => {
           } catch {}
         }}
       />
+
       {/* تحميل الحروف من البداية */}
       <img
         src={arabicLetters}
@@ -374,6 +405,7 @@ const Index = () => {
         className="fixed w-px h-px opacity-0 pointer-events-none"
         aria-hidden="true"
       />
+
       <div
         aria-hidden
         className="hidden"
@@ -382,21 +414,31 @@ const Index = () => {
           backgroundSize: "150px 150px",
         }}
       />
+
       {opened && <SprayParticles />}
+
       <MusicToggle ref={musicRef} active={true} />
+
       <Envelope
         onOpen={() => {
           musicRef.current?.playMusic();
+
           const preloadVideo = preloadVideoRef.current;
+
           if (preloadVideo) {
-            preloadVideo.currentTime = 0;
+            try {
+              preloadVideo.currentTime = 0;
+            } catch {}
+
             preloadVideo
               .play()
               .catch(() => {});
           }
+
           setOpened(true);
         }}
       />
+
       {opened && (
         <main
           className="relative z-10 animate-fadeIn"
@@ -425,6 +467,7 @@ const Index = () => {
             >
               EN
             </button>
+
             <button
               onClick={() => lang !== "ar" && toggle()}
               className="px-3 py-1 rounded-lg text-sm font-semibold transition-all"
@@ -438,6 +481,7 @@ const Index = () => {
               AR
             </button>
           </div>
+
           {/* السلايد الأول */}
           <section className="flex justify-center relative z-20">
             <div className="relative w-full aspect-[9/16] overflow-hidden">
@@ -456,67 +500,43 @@ const Index = () => {
                 onLoadedData={(e) => {
                   const visibleVideo = e.currentTarget;
                   const preloadVideo = preloadVideoRef.current;
+
                   if (preloadVideo) {
                     try {
                       visibleVideo.currentTime =
                         preloadVideo.currentTime;
                     } catch {}
                   }
+
+                  visibleVideo.play().catch(() => {});
                 }}
               />
+
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   background: "rgba(0,0,0,0.14)",
                 }}
               />
+
               <div
                 dir={lang === "ar" ? "rtl" : "ltr"}
-                className="absolute inset-0 flex flex-col items-center justify-end px-5 pb-16"
+                className="absolute inset-0 pointer-events-none"
               >
-                <div
-                  className="flex flex-col items-center justify-center"
+                <img
+                  src={lettersImage}
+                  alt=""
+                  draggable={false}
+                  className="absolute inset-0 w-full h-full object-contain select-none"
                   style={{
-                    transform: "translateY(-95px)",
+                    filter:
+                      "drop-shadow(0 2px 8px rgba(0,0,0,0.55))",
                   }}
-                >
-                  <img
-                    src={lettersImage}
-                    alt=""
-                    draggable={false}
-                    className="object-contain select-none"
-                    style={{
-                      width:
-                        lang === "ar"
-                          ? "86%"
-                          : "100%",
-                      maxWidth:
-                        lang === "ar"
-                          ? "520px"
-                          : "620px",
-                      maxHeight: "320px",
-                      filter:
-                        "drop-shadow(0 2px 8px rgba(0,0,0,0.55))",
-                    }}
-                  />
-                  <div
-                    className={`font-display ${
-                      lang === "ar"
-                        ? "text-2xl sm:text-3xl"
-                        : "text-2xl sm:text-3xl"
-                    } mt-5`}
-                    style={{
-                      color: "#FFFFFF",
-                      textShadow:
-                        "0 1px 3px rgba(0,0,0,0.75)",
-                    }}
-                  >
-                    26.12.2026
-                  </div>
-                </div>
+                />
               </div>
             </div>
           </section>
+
           {/* محتوى الدعوة تحت الفيديو */}
           <section className="px-4 pt-14 pb-8">
             <Reveal>
@@ -538,22 +558,22 @@ const Index = () => {
                     lang === "ar" ? "font-arabic" : ""
                   }`}
                 >
-                  {lang === "ar" && (
-                    <div className="flex items-center justify-center my-4">
-                      <span
-                        className="inline-block text-6xl sm:text-7xl font-normal leading-none select-none"
-                        style={{
-                          fontFamily: "'Monasabat', sans-serif",
-                          color: "#A67C2E",
-                          transform: "scale(3.4)",
-                          transformOrigin: "center",
-                          textRendering: "geometricPrecision",
-                        }}
-                      >
-                        {t("invite_to")}
-                      </span>
-                    </div>
-                  )}
+                  {/* السطر الأول يبقى عربياً في اللغتين */}
+                  <div className="flex items-center justify-center my-4">
+                    <span
+                      className="inline-block text-6xl sm:text-7xl font-normal leading-none select-none"
+                      style={{
+                        fontFamily: "'Monasabat', sans-serif",
+                        color: "#A67C2E",
+                        transform: "scale(3.4)",
+                        transformOrigin: "center",
+                        textRendering: "geometricPrecision",
+                      }}
+                    >
+                      {t("invite_to")}
+                    </span>
+                  </div>
+
                   <div
                     className="font-tajawal text-base sm:text-lg"
                     style={{
@@ -562,6 +582,7 @@ const Index = () => {
                   >
                     {t("invite_join")}
                   </div>
+
                   <div
                     className="font-tajawal text-base sm:text-lg"
                     style={{
@@ -570,6 +591,7 @@ const Index = () => {
                   >
                     {t("invite_day")}
                   </div>
+
                   {lang === "ar" && (
                     <div
                       className="font-tajawal text-base sm:text-lg pb-2"
@@ -580,6 +602,7 @@ const Index = () => {
                       {t("invite_with_love")}
                     </div>
                   )}
+
                   {lang === "ar" && (
                     <div
                       className="flex items-center justify-center gap-1 text-3xl sm:text-4xl font-bold py-2"
@@ -592,6 +615,7 @@ const Index = () => {
                       </span>
                     </div>
                   )}
+
                   {lang === "ar" && (
                     <div
                       className="font-tajawal text-base sm:text-lg"
@@ -602,6 +626,7 @@ const Index = () => {
                       {t("invite_attend")}
                     </div>
                   )}
+
                   {lang === "ar" && (
                     <div className="flex items-center justify-center gap-3 mt-2">
                       <div className="flex flex-col items-center">
@@ -613,6 +638,7 @@ const Index = () => {
                         >
                           {t("bride_name")}
                         </span>
+
                         <span
                           className="font-tajawal text-base sm:text-lg"
                           style={{
@@ -622,6 +648,7 @@ const Index = () => {
                           {t("bride_family_name")}
                         </span>
                       </div>
+
                       <span
                         className="font-sull"
                         style={{
@@ -631,6 +658,7 @@ const Index = () => {
                       >
                         {t("and")}
                       </span>
+
                       <div className="flex flex-col items-center">
                         <span
                           className="font-iran text-5xl sm:text-6xl"
@@ -640,6 +668,7 @@ const Index = () => {
                         >
                           {t("groom_name")}
                         </span>
+
                         <span
                           className="font-tajawal text-base sm:text-lg"
                           style={{
@@ -651,6 +680,7 @@ const Index = () => {
                       </div>
                     </div>
                   )}
+
                   {lang === "ar" && (
                     <div
                       className="font-tajawal text-base sm:text-lg"
@@ -661,6 +691,7 @@ const Index = () => {
                       {t("invite_god_willing")}
                     </div>
                   )}
+
                   {lang === "en" && (
                     <>
                       <div
@@ -671,6 +702,7 @@ const Index = () => {
                       >
                         With hearts full of joy,
                       </div>
+
                       <div
                         className="font-serif text-base sm:text-lg"
                         style={{
@@ -680,28 +712,48 @@ const Index = () => {
                         we invite you to join us in celebrating the wedding
                         of
                       </div>
+
                       <div
                         className="font-serif flex flex-col items-center justify-center my-3"
                         style={{
                           color: "#A67C2E",
                         }}
                       >
-                        <span className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-normal">
+                        <span
+                          className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-normal"
+                          style={{
+                            fontFamily:
+                              "'Snell Roundhand', 'URW Chancery L', 'Brush Script MT', cursive",
+                            letterSpacing: "0.08em",
+                          }}
+                        >
                           MOHAMMED
                         </span>
+
                         <span
-                          className="italic font-serif text-4xl sm:text-5xl my-1"
+                          className="text-4xl sm:text-5xl my-1"
                           style={{
-                            fontFamily: "Georgia, 'Times New Roman', serif",
+                            fontFamily:
+                              "'Snell Roundhand', 'URW Chancery L', 'Brush Script MT', cursive",
                             color: "#A67C2E",
+                            fontStyle: "normal",
                           }}
                         >
                           &
                         </span>
-                        <span className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-normal">
+
+                        <span
+                          className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-normal"
+                          style={{
+                            fontFamily:
+                              "'Snell Roundhand', 'URW Chancery L', 'Brush Script MT', cursive",
+                            letterSpacing: "0.08em",
+                          }}
+                        >
                           NOOR
                         </span>
                       </div>
+
                       <div
                         className="font-serif text-xs sm:text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-3 my-1"
                         style={{
@@ -709,12 +761,15 @@ const Index = () => {
                         }}
                       >
                         <span>RAMADAN</span>
+
                         <span
                           className="inline-block w-[1px] h-4"
                           style={{ backgroundColor: "#A67C2E" }}
                         />
+
                         <span>AL-ZUBIEDI</span>
                       </div>
+
                       <div
                         className="font-serif text-base sm:text-lg leading-relaxed mt-2"
                         style={{
@@ -729,6 +784,7 @@ const Index = () => {
               </div>
             </Reveal>
           </section>
+
           {/* Countdown */}
           <section className="px-4 py-16">
             <Reveal>
@@ -738,6 +794,7 @@ const Index = () => {
               >
                 {t("countdown_date")}
               </p>
+
               <h2
                 className="text-center font-arabic text-3xl mb-10"
                 style={{ color: "#A67C2E" }}
@@ -747,10 +804,12 @@ const Index = () => {
                   : "Wedding Countdown."}
               </h2>
             </Reveal>
+
             <Reveal delay={150}>
               <Countdown />
             </Reveal>
           </section>
+
           <section className="-mx-4 py-8">
             <img
               src={dividerImg}
@@ -758,6 +817,7 @@ const Index = () => {
               className="block w-full h-auto"
             />
           </section>
+
           {/* Venue */}
           <section className="px-4 py-16">
             <Reveal>
@@ -767,22 +827,23 @@ const Index = () => {
                   alt=""
                   className="mx-auto mb-4 w-14 h-auto"
                 />
+
                 <h2
                   className="font-arabic text-3xl"
                   style={{ color: "#A67C2E" }}
                 >
-                  {lang === "ar"
-                    ? t("details_title")
-                    : "Venue."}
+                  {lang === "ar" ? "موقع الفرح" : "Venue"}
                 </h2>
-                {lang === "ar" && (
-                  <div
-                    className="font-arabic text-sm mt-2"
-                    style={{ color: "#7C7367" }}
-                  >
-                    {t("details_subtitle")}
-                  </div>
-                )}
+
+                <div
+                  className="font-arabic text-sm mt-2"
+                  style={{ color: "#7C7367" }}
+                >
+                  {lang === "ar"
+                    ? "كل ما تحتاج معرفته"
+                    : "Everything You Need to Know"}
+                </div>
+
                 <img
                   src={flowerDivider}
                   alt=""
@@ -791,6 +852,7 @@ const Index = () => {
                 />
               </div>
             </Reveal>
+
             <Reveal delay={200}>
               <div
                 style={{
@@ -814,6 +876,7 @@ const Index = () => {
                         alt=""
                         className="w-7 h-7"
                       />
+
                       <span
                         className="font-arabic text-sm"
                         style={{
@@ -824,6 +887,7 @@ const Index = () => {
                         {t("hall_name")}
                       </span>
                     </div>
+
                     <div
                       className="font-arabic text-sm"
                       style={{
@@ -833,6 +897,7 @@ const Index = () => {
                       {t("venue_city")}
                     </div>
                   </div>
+
                   <iframe
                     title={t("map_title")}
                     src="https://www.google.com/maps?q=Sapphire+Addis+Hotel,+Namibia+St,+Addis+Ababa,+Ethiopia&output=embed"
@@ -844,16 +909,7 @@ const Index = () => {
                       borderRadius: "16px",
                     }}
                   />
-                  <div
-                    className="text-center mt-4 font-arabic"
-                    style={{
-                      color: "#2F2A24",
-                      fontSize: "15px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {t("hall_city")}
-                  </div>
+
                   {t("arrival_time").trim() && (
                     <div className="hidden items-center justify-center gap-2 mt-3 mb-5">
                       <Clock
@@ -862,6 +918,7 @@ const Index = () => {
                           color: "#687451",
                         }}
                       />
+
                       <span
                         className="font-arabic text-sm"
                         style={{
@@ -872,6 +929,7 @@ const Index = () => {
                       </span>
                     </div>
                   )}
+
                   <div className="grid grid-cols-2 gap-3">
                     <a
                       href="https://maps.app.goo.gl/HLfudh8kqaeihyzU6?g_st=ic"
@@ -888,6 +946,7 @@ const Index = () => {
                     >
                       {t("open_map")}
                     </a>
+
                     <a
                       href="/event.ics"
                       className="py-3 rounded-xl text-center font-arabic text-sm"
@@ -908,16 +967,19 @@ const Index = () => {
               </div>
             </Reveal>
           </section>
+
           {/* Details / Wedding Program */}
           <section className="px-4 py-8">
             <EventTimeline />
           </section>
+
           {/* Attendance Instructions */}
           <section className="px-4 py-8">
             <Reveal>
               <AttendanceInstructions />
             </Reveal>
           </section>
+
           {/* RSVP */}
           <section className="px-4 py-16">
             <Reveal>
@@ -928,12 +990,14 @@ const Index = () => {
                   className="mx-auto mb-5 w-28 h-auto select-none"
                   draggable={false}
                 />
+
                 <h2
                   className="font-arabic text-3xl"
                   style={{ color: "#A67C2E" }}
                 >
                   {t("rsvp_title")}
                 </h2>
+
                 <div
                   className="font-arabic text-sm mt-2"
                   style={{ color: "#7B8470" }}
@@ -942,8 +1006,10 @@ const Index = () => {
                 </div>
               </div>
             </Reveal>
+
             <RSVP />
           </section>
+
           {/* Footer */}
           <footer className="px-4 py-12 text-center">
             <Reveal>
@@ -955,6 +1021,7 @@ const Index = () => {
                   <span className="font-iran">
                     {t("designer_name1")}
                   </span>
+
                   <span
                     className={`${
                       lang === "ar"
@@ -964,10 +1031,12 @@ const Index = () => {
                   >
                     {t("designer_and")}
                   </span>
+
                   <span className="font-iran">
                     {t("designer_name2")}
                   </span>
                 </div>
+
                 <a
                   href="https://www.tiktok.com/@shim2t?_r=1&_t=ZS-95w0d8f7vnk"
                   target="_blank"
@@ -981,6 +1050,7 @@ const Index = () => {
                       alt="Gaim Store Icon"
                       className="w-4 h-4"
                     />
+
                     <span
                       className="font-arabic text-base"
                       style={{
@@ -991,11 +1061,13 @@ const Index = () => {
                       {t("store")}
                     </span>
                   </div>
+
                   <span
                     className="mt-0.5 text-xs inline-flex items-center gap-1"
                     style={{ color: "#7C7367" }}
                   >
                     TikTok @shim2t
+
                     <svg
                       className="w-3 h-3"
                       fill="none"
