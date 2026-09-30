@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { MapPin, Heart, QrCode, Baby, Camera, Clock, CameraOff, MailCheck } from "lucide-react";
-import invitationImg from "@/assets/Rp.mp4";
+import invitationImg from "@/assets/Wp.mp4";
 import Envelope from "@/components/Envelope";
 import SprayParticles from "@/components/SprayParticles";
 import Reveal from "@/components/Reveal";
@@ -155,9 +155,7 @@ const EventTimeline = () => {
 };
 
 const AttendanceInstructions = () => {
-  const { lang, t } = useLang();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const { t } = useLang();
 
   const instructions = [
     {
@@ -174,26 +172,8 @@ const AttendanceInstructions = () => {
     },
   ];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const start = windowHeight * 0.8;
-      const end = windowHeight * 0.2;
-      const current = rect.top;
-      let progress = (start - current) / (start - end);
-      progress = Math.max(0, Math.min(1, progress));
-      setScrollProgress(progress);
-    };
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
     <div
-      ref={containerRef}
       className="w-[92%] max-w-md p-6 sm:p-8 rounded-3xl text-center relative overflow-hidden my-4 mx-auto"
       style={{
         background: "rgba(255,255,255,0.28)",
@@ -210,69 +190,35 @@ const AttendanceInstructions = () => {
       >
         {t("details_title")}
       </h3>
-      <div className="relative max-w-xs mx-auto py-2">
-        <div
-          className="absolute left-1/2 top-3 bottom-3 -translate-x-1/2 w-[2px] opacity-30"
-          style={{ backgroundColor: "#C8A96A" }}
-        />
-        <div
-          className="absolute left-1/2 top-3 -translate-x-1/2 w-[2.5px] rounded-full transition-all duration-150 ease-out"
-          style={{
-            height: `${scrollProgress * 88}%`,
-            backgroundColor: "#C8A96A",
-            boxShadow: "0 0 10px rgba(200, 169, 106, 0.8)",
-          }}
-        />
-        <div className="space-y-10 relative z-10">
-          {instructions.map((item, index) => {
-            const threshold = index / (instructions.length - 1 || 1);
-            const isActive = scrollProgress >= threshold - 0.1;
-            return (
-              <div
-                key={index}
-                className="grid grid-cols-5 items-center dir-rtl"
-              >
-                <div
-                  className="col-span-2 text-left pl-2 sm:pl-3 font-arabic text-xs sm:text-sm font-bold transition-opacity duration-300"
-                  style={{
-                    color: "#33332B",
-                    opacity: isActive ? 1 : 0,
-                  }}
-                >
-                  {t(item.key)}
-                </div>
-                <div className="col-span-1 flex justify-center items-center">
-                  <div
-                    className="w-4 h-4 rounded-full border-2 transition-all duration-500 ease-out"
-                    style={{
-                      borderColor: "#C8A96A",
-                      backgroundColor: isActive
-                        ? "#C8A96A"
-                        : "transparent",
-                      transform: isActive ? "scale(1.3)" : "scale(1)",
-                      boxShadow: isActive
-                        ? "0 0 12px 3px rgba(200, 169, 106, 0.9), 0 0 22px 6px rgba(200, 169, 106, 0.5)"
-                        : "none",
-                    }}
-                  />
-                </div>
-                <div
-                  className="col-span-2 text-right pr-2 sm:pr-3 flex justify-start items-center transition-opacity duration-300"
-                  style={{
-                    opacity: isActive ? 1 : 0,
-                  }}
-                >
-                  <div
-                    className="p-1.5 rounded-full flex justify-center items-center"
-                    style={{ background: "rgba(200, 169, 106, 0.15)" }}
-                  >
-                    {item.icon}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+
+      <div className="flex flex-col gap-4">
+        {instructions.map((item, index) => (
+          <div
+            key={index}
+            className="w-full rounded-2xl px-5 py-4 flex items-center justify-between"
+            style={{
+              background: "rgba(255,255,255,0.38)",
+              border: "1px solid rgba(255,255,255,0.45)",
+              boxShadow: "0 8px 20px rgba(200,169,106,.08)",
+            }}
+          >
+            <div
+              className="font-arabic text-xs sm:text-sm font-bold text-right flex-1"
+              style={{ color: "#33332B" }}
+            >
+              {t(item.key)}
+            </div>
+
+            <div
+              className="p-2 rounded-full flex justify-center items-center mr-3"
+              style={{
+                background: "rgba(200, 169, 106, 0.15)",
+              }}
+            >
+              {item.icon}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
