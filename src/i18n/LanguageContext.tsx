@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+
 export type Lang = "ar" | "en";
 type Dict = Record<string, string>;
+
 const ar: Dict = {
   // Invitation
   tap_open: "اضغط لفتح الدعوة",
@@ -22,6 +24,7 @@ const ar: Dict = {
   groom_family_name: "الزُبيدي",
   invite_god_willing: "وذلك بمشيئة الله تعالى يوم السبت",
   date_line: "٢٦ . ١٢ . ٢٠٢٦",
+
   // Countdown
   countdown_date: "٢٦ ديسمبر ٢٠٢٦",
   countdown_title: "المتبقي حتى فرحتنا",
@@ -29,9 +32,14 @@ const ar: Dict = {
   hours: "ساعات",
   minutes: "دقائق",
   seconds: "ثواني",
-  // Details
-  details_title: "تفاصيل يوم الفرح",
+
+  // Details / Attendance Instructions
+  details_title: "تعليمات الحضور",
   details_subtitle: "كل ما تحتاج معرفته",
+  no_kids: "يمنع اصطحاب الأطفال",
+  no_cameras: "يمنع التصوير بالجوال",
+  show_invitation: "يرجى إبراز الدعوة عند الحضور",
+
   // Venue
   venue_title: "موقع حفلنا",
   venue_name: "Sapphire Hotel",
@@ -41,6 +49,7 @@ const ar: Dict = {
   arrival_time: " ",
   open_map: "افتح في الخريطة",
   add_calendar: "إضافة إلى التقويم",
+
   // Program
   program_title: "برنامج المناسبة",
   program_subtitle: " ",
@@ -50,9 +59,8 @@ const ar: Dict = {
   zaffa_time: "الساعة ٥:٣٠ مساءً",
   program_dinner: "العشاء",
   dinner_time: "الساعة ٧:٠٠ مساءً",
-  no_cameras: "يمنع التصوير",
-  no_kids: "يمنع اصطحاب الأطفال",
   swipe_more: " ",
+
   // Event Timeline
   event_reception: "الاستقبال",
   event_reception_time: "الساعة ٤:٠٠ مساءً",
@@ -62,6 +70,7 @@ const ar: Dict = {
   event_dinner_time: "الساعة ٧:٠٠ مساءً",
   event_end: "الانتهاء",
   event_end_time: "الساعة ١١:٠٠ مساءً",
+
   // RSVP
   rsvp_title: "الدعوة شخصية",
   rsvp_sub: "نتشرف بحضوركم",
@@ -82,12 +91,14 @@ const ar: Dict = {
   thanks_attending: "شكراً لتأكيد حضورك",
   thanks_declined: "نقدّر اعتذارك",
   redirect_wa: "سيتم تحويلك إلى الواتساب لإرسال الرد…",
+
   // QR
   qr_title: "باركود الدخول الخاص بك",
   qr_sub: "يرجى تقديم هذا الباركود عند البوابة",
   save_qr: "حفظ الباركود",
   redirecting_in: "سيتم تحويلك إلى الواتساب خلال",
   seconds_short: "ث",
+
   // Footer
   made_by: " ",
   store: "غيمة",
@@ -95,6 +106,7 @@ const ar: Dict = {
   designer_and: "&",
   designer_name2: "نســور",
   tiktok: "@shim2t.TikTok",
+
   // Calendar
   date_full: "السبت ٢٦ ديسمبر ٢٠٢٦",
   cal_day: "Saturday",
@@ -106,6 +118,7 @@ const ar: Dict = {
   guests_4: "٤",
   guests_5: "٥"
 };
+
 const en: Dict = {
   // Invitation
   tap_open: "Tap to open the invitation",
@@ -127,6 +140,7 @@ const en: Dict = {
   groom_family_name: "Ramadan",
   invite_god_willing: "God willing, on Saturday",
   date_line: "26.12.2026",
+
   // Countdown
   countdown_date: "26 December 2026",
   countdown_title: "Until Our Celebration",
@@ -134,9 +148,14 @@ const en: Dict = {
   hours: "Hours",
   minutes: "Minutes",
   seconds: "Seconds",
-  // Details
-  details_title: "Event Details",
+
+  // Details / Attendance Instructions
+  details_title: "Attendance Instructions",
   details_subtitle: "Everything you need to know",
+  no_kids: "Children are not permitted",
+  no_cameras: "Mobile photography is strictly prohibited",
+  show_invitation: "Please present your invitation upon arrival",
+
   // Venue
   venue_title: "Our Venue",
   venue_name: "Sapphire Hotel",
@@ -146,6 +165,7 @@ const en: Dict = {
   arrival_time: " ",
   open_map: "Open in Maps",
   add_calendar: "Add to Calendar",
+
   // Program
   program_title: "Wedding Program.",
   program_subtitle: " ",
@@ -155,9 +175,8 @@ const en: Dict = {
   zaffa_time: "5:30 PM",
   program_dinner: "Dinner",
   dinner_time: "7:00 PM",
-  no_cameras: "No Photography",
-  no_kids: "Children are not permitted",
   swipe_more: " ",
+
   // Event Timeline
   event_reception: "Reception",
   event_reception_time: "4:00 PM",
@@ -167,6 +186,7 @@ const en: Dict = {
   event_dinner_time: "7:00 PM",
   event_end: "Celebration Ends",
   event_end_time: "11:00 PM",
+
   // RSVP
   rsvp_title: "Personal Invitation",
   rsvp_sub: "We would be honored by your presence",
@@ -187,12 +207,14 @@ const en: Dict = {
   thanks_attending: "Thank you for confirming your attendance",
   thanks_declined: "We appreciate your response",
   redirect_wa: "Redirecting you to WhatsApp…",
+
   // QR
   qr_title: "Your Entry QR Code",
   qr_sub: "Please present this QR code at the entrance",
   save_qr: "Save QR Code",
   redirecting_in: "Redirecting to WhatsApp in",
   seconds_short: "s",
+
   // Footer
   made_by: " ",
   store: "Ghaimah",
@@ -200,6 +222,7 @@ const en: Dict = {
   designer_and: "&",
   designer_name2: "Noor",
   tiktok: "@shim2t.TikTok",
+
   // Calendar
   date_full: "Saturday, December 26, 2026",
   cal_day: "Saturday",
@@ -211,14 +234,18 @@ const en: Dict = {
   guests_4: "4",
   guests_5: "5"
 };
+
 const dicts = { ar, en };
+
 interface LangCtx {
   lang: Lang;
   t: (k: keyof typeof ar) => string;
   toggle: () => void;
   dir: "rtl" | "ltr";
 }
+
 const Ctx = createContext<LangCtx | null>(null);
+
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [lang, setLang] = useState(() => {
     const saved =
@@ -227,22 +254,28 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
         : null;
     return saved === "en" || saved === "ar" ? saved : "ar";
   });
+
   const dir = lang === "ar" ? "rtl" : "ltr";
+
   useEffect(() => {
     localStorage.setItem("lang", lang);
     document.documentElement.lang = lang;
     document.documentElement.dir = dir;
   }, [lang, dir]);
+
   const t = (k: keyof typeof ar) => dicts[lang][k] ?? k;
+
   const toggle = () => {
     setLang((l) => (l === "ar" ? "en" : "ar"));
   };
+
   return (
     <Ctx.Provider value={{ lang, t, toggle, dir }}>
       {children}
     </Ctx.Provider>
   );
 };
+
 export const useLang = () => {
   const c = useContext(Ctx);
   if (!c) {
