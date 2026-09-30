@@ -228,8 +228,7 @@ const Index = () => {
   const [opened, setOpened] = useState(false);
   const { t, lang, toggle } = useLang();
   const musicRef = useRef<MusicToggleRef | null>(null);
-  const invitationVideoRef = useRef<HTMLVideoElement | null>(null);
-  const preloadVideoRef = useRef<HTMLVideoElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const autoScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -237,29 +236,10 @@ const Index = () => {
   const autoScrollStoppedRef = useRef(false);
 
   useEffect(() => {
-    const video = preloadVideoRef.current;
-    if (!video) return;
-
-    video.preload = "auto";
-    video.load();
-
-    const prepareFirstFrame = () => {
-      try {
-        video.currentTime = 0;
-      } catch {}
-    };
-
-    if (video.readyState >= 2) {
-      prepareFirstFrame();
-    } else {
-      video.addEventListener("loadeddata", prepareFirstFrame, {
-        once: true,
-      });
+    // التأكد من تشغيل الفيديو فور تحميل المكون
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
     }
-
-    return () => {
-      video.removeEventListener("loadeddata", prepareFirstFrame);
-    };
   }, []);
 
   useEffect(() => {
@@ -359,38 +339,15 @@ const Index = () => {
 
   return (
     <div
-      className="overflow-x-hidden w-full"
+      className="overflow-x-hidden w-full min-h-screen relative"
       style={{
         backgroundImage: `url(${backgroundImg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
-        minHeight: "100vh",
       }}
     >
-      <video
-        ref={preloadVideoRef}
-        src={invitationImg}
-        preload="auto"
-        muted
-        playsInline
-        autoPlay
-        loop
-        className="fixed inset-0 w-full h-full object-cover pointer-events-none"
-        style={{
-          zIndex: opened ? 0 : 1,
-          opacity: opened ? 0 : 1,
-          background: "#F7F5F0",
-          transition: "opacity 0.3s ease",
-        }}
-        aria-hidden="true"
-        onLoadedData={(e) => {
-          try {
-            e.currentTarget.currentTime = 0;
-          } catch {}
-        }}
-      />
-
+      {/* الصور المخفية للتجهيز المسبق */}
       <img
         src={arabicLetters}
         alt=""
@@ -404,15 +361,6 @@ const Index = () => {
         aria-hidden="true"
       />
 
-      <div
-        aria-hidden
-        className="hidden"
-        style={{
-          backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><g fill='none' stroke='%23B8860B' stroke-width='0.7' opacity='0.9'><g transform='translate(30 30)'><circle cx='0' cy='0' r='2.2' fill='%23B8860B'/><path d='M0 0 C -5 -3 -8 -8 -5 -12 C -1 -14 3 -11 4 -7'/><path d='M0 0 C 5 -3 8 -8 5 -12 C 1 -14 -3 -11 -4 -7'/><path d='M0 0 C -7 0 -11 5 -9 10 C -5 12 -1 9 0 5'/><path d='M0 0 C 7 0 11 5 9 10 C 5 12 1 9 0 5'/><path d='M0 5 C -2 9 0 13 3 12'/></g><g transform='translate(90 80)'><circle cx='0' cy='0' r='1.8' fill='%23B8860B'/><path d='M0 0 C -4 -2 -6 -6 -4 -9 C -1 -11 2 -8 3 -5'/><path d='M0 0 C 4 -2 6 -6 4 -9 C 1 -11 -2 -8 -3 -5'/><path d='M0 0 C -5 0 -8 4 -7 8 C -4 9 -1 7 0 4'/><path d='M0 0 C 5 0 8 4 7 8 C 4 9 1 7 0 4'/></g><g transform='translate(75 25)'><circle cx='0' cy='0' r='1.5' fill='%23B8860B'/><path d='M0 -4 C -3 -4 -4 -1 -2 1'/><path d='M0 -4 C 3 -4 4 -1 2 1'/><path d='M-3 2 C -5 4 -3 7 0 6'/><path d='M3 2 C 5 4 3 7 0 6'/></g><g transform='translate(20 95)'><circle cx='0' cy='0' r='1.5' fill='%23B8860B'/><path d='M0 -4 C -3 -4 -4 -1 -2 1'/><path d='M0 -4 C 3 -4 4 -1 2 1'/><path d='M-3 2 C -5 4 -3 7 0 6'/><path d='M3 2 C 5 4 3 7 0 6'/></g><path d='M55 55 q 4 -2 8 0' /><path d='M58 56 q 0 3 -2 5'/></g></svg>")`,
-          backgroundSize: "150px 150px",
-        }}
-      />
-
       {opened && <SprayParticles />}
 
       <MusicToggle ref={musicRef} active={true} />
@@ -420,19 +368,6 @@ const Index = () => {
       <Envelope
         onOpen={() => {
           musicRef.current?.playMusic();
-
-          const preloadVideo = preloadVideoRef.current;
-
-          if (preloadVideo) {
-            try {
-              preloadVideo.currentTime = 0;
-            } catch {}
-
-            preloadVideo
-              .play()
-              .catch(() => {});
-          }
-
           setOpened(true);
         }}
       />
@@ -480,33 +415,21 @@ const Index = () => {
             </button>
           </div>
 
-          {/* السلايد الأول */}
+          {/* السلايد الأول: يحوي المخطوطات والطبقة الشفافة مع استغلال الفيديو الثابت كخلفية له */}
           <section className="flex justify-center relative z-20">
             <div className="relative w-full aspect-[9/16] overflow-hidden">
+              {/* فيديو مفرد مستمر دون إعادة تحميل */}
               <video
-                ref={invitationVideoRef}
+                ref={videoRef}
                 src={invitationImg}
-                muted
-                loop
-                playsInline
                 preload="auto"
+                muted
+                playsInline
                 autoPlay
-                className="absolute inset-0 w-full h-full object-cover animate-videoFade"
+                loop
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                 style={{
                   background: "#F7F5F0",
-                }}
-                onLoadedData={(e) => {
-                  const visibleVideo = e.currentTarget;
-                  const preloadVideo = preloadVideoRef.current;
-
-                  if (preloadVideo) {
-                    try {
-                      visibleVideo.currentTime =
-                        preloadVideo.currentTime;
-                    } catch {}
-                  }
-
-                  visibleVideo.play().catch(() => {});
                 }}
               />
 
@@ -519,7 +442,7 @@ const Index = () => {
 
               <div
                 dir={lang === "ar" ? "rtl" : "ltr"}
-                className="absolute inset-0 pointer-events-none"
+                className="absolute inset-0 pointer-events-none z-10"
               >
                 <img
                   src={lettersImage}
@@ -556,7 +479,6 @@ const Index = () => {
                     lang === "ar" ? "font-arabic" : ""
                   }`}
                 >
-                  {/* السطر الأول يبقى عربياً في اللغتين */}
                   <div className="flex items-center justify-center my-4">
                     <span
                       className="inline-block text-6xl sm:text-7xl font-normal leading-none select-none"
