@@ -368,7 +368,6 @@ const Index = () => {
         minHeight: "100vh",
       }}
     >
-      {/* فيديو الدعوة موجود ومحمل من البداية تحت الظرف */}
       <video
         ref={preloadVideoRef}
         src={invitationImg}
@@ -392,7 +391,6 @@ const Index = () => {
         }}
       />
 
-      {/* تحميل الحروف من البداية */}
       <img
         src={arabicLetters}
         alt=""
@@ -694,16 +692,6 @@ const Index = () => {
 
                   {lang === "en" && (
                     <>
-                      <div
-                        className="font-serif text-base sm:text-lg"
-                        style={{
-                          color: "#8A7457",
-                        }}
-                      >
-                        we invite you to join us in celebrating the wedding
-                        of
-                      </div>
-
                       <div
                         className="font-serif flex flex-col items-center justify-center my-3"
                         style={{
