@@ -123,8 +123,8 @@ const en: Dict = {
   // Invitation
   tap_open: "Tap to open the invitation",
   invite_to: "2",
-  invite_join: "With hearts full of joy,",
-  invite_day: "we invite you to join us in celebrating the wedding of",
+  invite_join: "Beautiful days are not complete without you",
+  invite_day: "Joyful moments begin only with your presence",
   invite_with_love: "Mrs.",
   word1: "Mrs.",
   word2: "Mrs.",
