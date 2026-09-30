@@ -70,7 +70,8 @@ const ar: Dict = {
   event_dinner_time: "الساعة ٧:٠٠ مساءً",
   event_end: "الانتهاء",
   event_end_time: "الساعة ١١:٠٠ مساءً",
-
+confirm_attendance: "تأكيد الحضور",
+decline_attendance: "الاعتذار عن الحضور",
   // RSVP
   rsvp_title: "الدعوة شخصية",
   rsvp_sub: "نتشرف بحضوركم",
@@ -186,7 +187,8 @@ const en: Dict = {
   event_dinner_time: "7:00 PM",
   event_end: "Celebration Ends",
   event_end_time: "11:00 PM",
-
+confirm_attendance: "Confirm Attendance",
+decline_attendance: "Decline Attendance",
   // RSVP
   rsvp_title: "Personal Invitation",
   rsvp_sub: "We would be honored by your presence",
