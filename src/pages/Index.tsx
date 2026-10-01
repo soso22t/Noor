@@ -170,52 +170,45 @@ const EventTimeline = () => {
 const AttendanceInstructions = () => {
   const { t, lang } = useLang();
 
-  const instructions = [
-    {
-      key: "no_kids" as const,
-      icon: <Baby className="w-5 h-5" style={{ color: "#C8A96A" }} />,
-    },
-    {
-      key: "no_cameras" as const,
-      icon: <CameraOff className="w-5 h-5" style={{ color: "#C8A96A" }} />,
-    },
-    {
-      key: "show_invitation" as const,
-      icon: <MailCheck className="w-5 h-5" style={{ color: "#C8A96A" }} />,
-    },
+  const items = [
+    { key: "no_kids" as const, icon: <Baby size={20} /> },
+    { key: "no_cameras" as const, icon: <Camera size={20} /> },
+    { key: "show_invitation" as const, icon: <QrCode size={20} /> },
   ];
 
   return (
-    <div
-      className="w-[92%] max-w-md p-6 sm:p-8 rounded-3xl text-center relative overflow-hidden my-4 mx-auto"
-      style={{
-        background: "rgba(255,255,255,0.28)",
-        color: "#C8A96A",
-        border: "1px solid rgba(255,255,255,0.45)",
-        boxShadow: "0 12px 30px rgba(200,169,106,.12)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-      }}
-    >
-      <h3
-        className="font-arabic text-xl sm:text-2xl font-bold mb-8"
-        style={{ color: "#C8A96A" }}
-      >
-        {t("details_title")}
-      </h3>
+    <section className="w-full max-w-md mx-auto px-4 py-10">
+      <div className="text-center mb-6">
+        <h3
+          className="font-arabic text-lg sm:text-xl font-bold"
+          style={{ color: "#33332B" }}
+        >
+          {t("details_title")}
+        </h3>
+      </div>
 
-      <div className="flex flex-col gap-4">
-        {instructions.map((item, index) => (
+      <div className="space-y-3">
+        {items.map((item, index) => (
           <div
             key={index}
             dir="ltr"
             className="w-full rounded-2xl px-5 py-4 flex items-center"
             style={{
-              background: "rgba(255,255,255,0.38)",
-              border: "1px solid rgba(255,255,255,0.45)",
-              boxShadow: "0 8px 20px rgba(200,169,106,.08)",
+              background: "rgba(255,255,255,0.55)",
+              border: "1px solid rgba(200, 169, 106, 0.25)",
             }}
           >
+            {/* الأيقونة ثابتة جهة اليسار */}
+            <div
+              className="p-2 rounded-full flex-shrink-0 flex justify-center items-center mr-3"
+              style={{
+                background: "rgba(200, 169, 106, 0.15)",
+              }}
+            >
+              {item.icon}
+            </div>
+
+            {/* النص فقط هو الذي يتغير اتجاهه */}
             <div
               className={`font-arabic text-xs sm:text-sm font-bold flex-1 ${
                 lang === "ar" ? "text-right" : "text-left"
@@ -224,19 +217,10 @@ const AttendanceInstructions = () => {
             >
               {t(item.key)}
             </div>
-
-            <div
-              className="p-2 rounded-full flex justify-center items-center ml-3"
-              style={{
-                background: "rgba(200, 169, 106, 0.15)",
-              }}
-            >
-              {item.icon}
-            </div>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
