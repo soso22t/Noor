@@ -1,5 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Heart, QrCode, Baby, Camera, Clock, CameraOff, MailCheck } from "lucide-react";
+import {
+  MapPin,
+  Heart,
+  QrCode,
+  Baby,
+  Camera,
+  Clock,
+  CameraOff,
+  MailCheck,
+} from "lucide-react";
 import invitationImg from "@/assets/Wp.mp4";
 import Envelope from "@/components/Envelope";
 import SprayParticles from "@/components/SprayParticles";
@@ -56,31 +65,9 @@ const events: EventItem[] = [
 
 const EventTimeline = () => {
   const { lang } = useLang();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const start = windowHeight * 0.8;
-      const end = windowHeight * 0.2;
-      const current = rect.top;
-      let progress = (start - current) / (start - end);
-      progress = Math.max(0, Math.min(1, progress));
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <div
-      ref={containerRef}
       className="w-[92%] max-w-md p-6 sm:p-8 rounded-3xl text-center relative overflow-hidden my-4 mx-auto"
       style={{
         background: "rgba(255,255,255,0.28)",
@@ -95,72 +82,43 @@ const EventTimeline = () => {
         className="font-arabic text-xl sm:text-2xl font-bold mb-8"
         style={{ color: "#C8A96A" }}
       >
-        {lang === "ar" ? "برنامج المناسبة" : "Wedding Program."}
+        {lang === "ar" ? "برنامج الحفل" : "Event Program"}
       </h3>
 
-      <div className="relative max-w-xs mx-auto py-2">
+      <div className="relative">
         <div
-          className="absolute left-1/2 top-3 bottom-3 -translate-x-1/2 w-[2px] opacity-30"
-          style={{ backgroundColor: "#C8A96A" }}
+          className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px"
+          style={{ background: "#C8A96A" }}
         />
 
-        <div
-          className="absolute left-1/2 top-3 -translate-x-1/2 w-[2.5px] rounded-full transition-all duration-150 ease-out"
-          style={{
-            height: `${scrollProgress * 88}%`,
-            backgroundColor: "#C8A96A",
-            boxShadow: "0 0 10px rgba(200, 169, 106, 0.8)",
-          }}
-        />
-
-        <div className="space-y-12 relative z-10">
-          {events.map((event, index) => {
-            const threshold = index / (events.length - 1 || 1);
-            const isActive = scrollProgress >= threshold - 0.1;
-
-            return (
+        <div className="flex flex-col gap-7">
+          {events.map((event, index) => (
+            <Reveal key={index}>
               <div
-                key={index}
-                className="grid grid-cols-5 items-center dir-rtl"
+                dir="rtl"
+                className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 relative"
               >
                 <div
-                  className="col-span-2 text-left pl-2 sm:pl-3 font-arabic text-sm sm:text-base font-bold transition-opacity duration-300"
-                  style={{
-                    color: "#33332B",
-                    opacity: isActive ? 1 : 0,
-                  }}
+                  className="font-arabic text-sm sm:text-base font-bold text-left"
+                  style={{ color: "#33332B" }}
                 >
                   {lang === "ar" ? event.titleAr : event.titleEn}
                 </div>
 
-                <div className="col-span-1 flex justify-center items-center">
-                  <div
-                    className="w-4 h-4 rounded-full border-2 transition-all duration-500 ease-out"
-                    style={{
-                      borderColor: "#C8A96A",
-                      backgroundColor: isActive
-                        ? "#C8A96A"
-                        : "transparent",
-                      transform: isActive ? "scale(1.3)" : "scale(1)",
-                      boxShadow: isActive
-                        ? "0 0 12px 3px rgba(200, 169, 106, 0.9), 0 0 22px 6px rgba(200, 169, 106, 0.5)"
-                        : "none",
-                    }}
-                  />
-                </div>
+                <div
+                  className="w-3 h-3 rounded-full relative z-10"
+                  style={{ background: "#C8A96A" }}
+                />
 
                 <div
-                  className="col-span-2 text-right pr-2 sm:pr-3 font-display text-xs sm:text-sm font-semibold tracking-wider dir-ltr transition-opacity duration-300"
-                  style={{
-                    color: "#33332B",
-                    opacity: isActive ? 1 : 0,
-                  }}
+                  className="font-arabic text-sm sm:text-base font-bold text-right"
+                  style={{ color: "#33332B" }}
                 >
                   {lang === "ar" ? event.timeAr : event.timeEn}
                 </div>
               </div>
-            );
-          })}
+            </Reveal>
+          ))}
         </div>
       </div>
     </div>
@@ -170,37 +128,54 @@ const EventTimeline = () => {
 const AttendanceInstructions = () => {
   const { t, lang } = useLang();
 
-  const items = [
-    { key: "no_kids" as const, icon: <Baby size={20} /> },
-    { key: "no_cameras" as const, icon: <Camera size={20} /> },
-    { key: "show_invitation" as const, icon: <QrCode size={20} /> },
+  const instructions = [
+    {
+      key: "no_kids" as const,
+      icon: <Baby className="w-5 h-5" style={{ color: "#C8A96A" }} />,
+    },
+    {
+      key: "no_cameras" as const,
+      icon: <CameraOff className="w-5 h-5" style={{ color: "#C8A96A" }} />,
+    },
+    {
+      key: "show_invitation" as const,
+      icon: <MailCheck className="w-5 h-5" style={{ color: "#C8A96A" }} />,
+    },
   ];
 
   return (
-    <section className="w-full max-w-md mx-auto px-4 py-10">
-      <div className="text-center mb-6">
-        <h3
-          className="font-arabic text-lg sm:text-xl font-bold"
-          style={{ color: "#33332B" }}
-        >
-          {t("details_title")}
-        </h3>
-      </div>
+    <div
+      className="w-[92%] max-w-md p-6 sm:p-8 rounded-3xl text-center relative overflow-hidden my-4 mx-auto"
+      style={{
+        background: "rgba(255,255,255,0.28)",
+        color: "#C8A96A",
+        border: "1px solid rgba(255,255,255,0.45)",
+        boxShadow: "0 12px 30px rgba(200,169,106,.12)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+      }}
+    >
+      <h3
+        className="font-arabic text-xl sm:text-2xl font-bold mb-8"
+        style={{ color: "#C8A96A" }}
+      >
+        {t("details_title")}
+      </h3>
 
-      <div className="space-y-3">
-        {items.map((item, index) => (
+      <div className="flex flex-col gap-4">
+        {instructions.map((item, index) => (
           <div
             key={index}
             dir="ltr"
             className="w-full rounded-2xl px-5 py-4 flex items-center"
             style={{
-              background: "rgba(255,255,255,0.55)",
-              border: "1px solid rgba(200, 169, 106, 0.25)",
+              background: "rgba(255,255,255,0.38)",
+              border: "1px solid rgba(255,255,255,0.45)",
+              boxShadow: "0 8px 20px rgba(200,169,106,.08)",
             }}
           >
-            {/* الأيقونة ثابتة جهة اليسار */}
             <div
-              className="p-2 rounded-full flex-shrink-0 flex justify-center items-center mr-3"
+              className="p-2 rounded-full flex justify-center items-center mr-3"
               style={{
                 background: "rgba(200, 169, 106, 0.15)",
               }}
@@ -208,7 +183,6 @@ const AttendanceInstructions = () => {
               {item.icon}
             </div>
 
-            {/* النص فقط هو الذي يتغير اتجاهه */}
             <div
               className={`font-arabic text-xs sm:text-sm font-bold flex-1 ${
                 lang === "ar" ? "text-right" : "text-left"
@@ -220,128 +194,129 @@ const AttendanceInstructions = () => {
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 };
 
 const Index = () => {
+  const { lang, setLang, t } = useLang();
+
   const [opened, setOpened] = useState(false);
-  const { t, lang, toggle } = useLang();
-  const musicRef = useRef<MusicToggleRef | null>(null);
+
+  const musicRef = useRef<MusicToggleRef>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const autoScrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
-  const autoScrollFrameRef = useRef<number | null>(null);
+
+  const autoScrollRef = useRef<number | null>(null);
   const autoScrollStoppedRef = useRef(false);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    // تشغيل الفيديو وتعيين الوقت المبدئي على الإطار الأول
-    video.currentTime = 0;
-    video.play().catch(() => {});
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
   }, []);
 
   useEffect(() => {
     if (!opened) return;
 
     autoScrollStoppedRef.current = false;
-    let animationFrameId: number;
 
-    const handleUserInteraction = () => {
+    const stopAutoScroll = () => {
       autoScrollStoppedRef.current = true;
 
-      if (autoScrollTimerRef.current) {
-        clearTimeout(autoScrollTimerRef.current);
-        autoScrollTimerRef.current = null;
-      }
-
-      if (autoScrollFrameRef.current) {
-        cancelAnimationFrame(autoScrollFrameRef.current);
-        autoScrollFrameRef.current = null;
+      if (autoScrollRef.current !== null) {
+        cancelAnimationFrame(autoScrollRef.current);
+        autoScrollRef.current = null;
       }
     };
 
-    window.addEventListener("touchstart", handleUserInteraction, {
-      passive: true,
-    });
-    window.addEventListener("wheel", handleUserInteraction, {
-      passive: true,
-    });
-    window.addEventListener("mousedown", handleUserInteraction, {
-      passive: true,
-    });
-    window.addEventListener("keydown", handleUserInteraction, {
-      passive: true,
-    });
-
-    autoScrollTimerRef.current = setTimeout(() => {
-      if (autoScrollStoppedRef.current) return;
-
-      const startPosition = window.pageYOffset;
-      const targetPosition =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const distance = targetPosition - startPosition;
-
-      if (distance <= 0) return;
-
+    const startAutoScroll = () => {
+      const startTime = performance.now();
       const duration = 40000;
-      const startTime = Date.now();
 
-      const animation = () => {
+      const scroll = (now: number) => {
         if (autoScrollStoppedRef.current) return;
 
-        const elapsed = Date.now() - startTime;
+        const elapsed = now - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        const run = startPosition + distance * progress;
 
         window.scrollTo({
-          top: run,
-          behavior: "instant",
+          top:
+            document.documentElement.scrollHeight *
+            window.innerHeight *
+            0 +
+            (document.documentElement.scrollHeight -
+              window.innerHeight) *
+              progress,
+          behavior: "auto",
         });
 
         if (progress < 1) {
-          animationFrameId = requestAnimationFrame(animation);
-          autoScrollFrameRef.current = animationFrameId;
+          autoScrollRef.current = requestAnimationFrame(scroll);
         } else {
-          autoScrollFrameRef.current = null;
+          autoScrollRef.current = null;
         }
       };
 
-      animationFrameId = requestAnimationFrame(animation);
-      autoScrollFrameRef.current = animationFrameId;
-    }, 2500);
+      setTimeout(() => {
+        if (!autoScrollStoppedRef.current) {
+          autoScrollRef.current = requestAnimationFrame(scroll);
+        }
+      }, 2500);
+    };
+
+    const eventsToStop = [
+      "touchstart",
+      "wheel",
+      "mousedown",
+      "keydown",
+    ] as const;
+
+    eventsToStop.forEach((event) =>
+      window.addEventListener(event, stopAutoScroll, { passive: true })
+    );
+
+    startAutoScroll();
 
     return () => {
-      if (autoScrollTimerRef.current) {
-        clearTimeout(autoScrollTimerRef.current);
-        autoScrollTimerRef.current = null;
+      if (autoScrollRef.current !== null) {
+        cancelAnimationFrame(autoScrollRef.current);
+        autoScrollRef.current = null;
       }
 
-      if (autoScrollFrameRef.current) {
-        cancelAnimationFrame(autoScrollFrameRef.current);
-        autoScrollFrameRef.current = null;
-      }
-
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-
-      window.removeEventListener("touchstart", handleUserInteraction);
-      window.removeEventListener("wheel", handleUserInteraction);
-      window.removeEventListener("mousedown", handleUserInteraction);
-      window.removeEventListener("keydown", handleUserInteraction);
+      eventsToStop.forEach((event) =>
+        window.removeEventListener(event, stopAutoScroll)
+      );
     };
   }, [opened]);
 
-  const lettersImage =
-    lang === "ar" ? arabicLetters : englishLetters;
+  useEffect(() => {
+    const preloadImages = [
+      arabicLetters,
+      englishLetters,
+      dividerImg,
+      flowerDivider,
+      rsvpIcon,
+      locationIcon,
+    ];
+
+    preloadImages.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  const handleOpen = () => {
+    setOpened(true);
+
+    setTimeout(() => {
+      musicRef.current?.play();
+    }, 300);
+  };
 
   return (
     <div
-      className="overflow-x-hidden w-full min-h-screen relative"
+      className="min-h-screen w-full relative overflow-x-hidden"
       style={{
         backgroundImage: `url(${backgroundImg})`,
         backgroundSize: "cover",
@@ -349,653 +324,313 @@ const Index = () => {
         backgroundAttachment: "fixed",
       }}
     >
-      {/* الصور المخفية للتجهيز المسبق */}
-      <img
-        src={arabicLetters}
-        alt=""
-        className="fixed w-px h-px opacity-0 pointer-events-none"
-        aria-hidden="true"
-      />
+      <SprayParticles />
 
-      <img
-        src={englishLetters}
-        alt=""
-        className="fixed w-px h-px opacity-0 pointer-events-none"
-        aria-hidden="true"
-      />
+      <MusicToggle ref={musicRef} />
 
-      {opened && <SprayParticles />}
-
-      <MusicToggle ref={musicRef} active={true} />
-
-      <Envelope
-        onOpen={() => {
-          musicRef.current?.playMusic();
-          setOpened(true);
-        }}
-      />
+      {!opened && (
+        <Envelope
+          onOpen={handleOpen}
+          musicRef={musicRef}
+        />
+      )}
 
       {opened && (
-        <main
-          className="relative z-10 animate-fadeIn"
-          style={{
-            animation: "fadeIn 0.8s ease forwards",
-          }}
-        >
-          <div
-            dir="ltr"
-            className="fixed top-5 right-5 z-[9999] flex p-1 rounded-xl"
+        <>
+          <button
+            onClick={() => setLang(lang === "ar" ? "en" : "ar")}
+            className="fixed top-4 right-4 z-50 font-arabic text-sm px-4 py-2 rounded-full"
             style={{
-              background: "rgba(255,255,255,0.92)",
-              border: "1px solid #E7D8B7",
-              boxShadow: "0 8px 25px rgba(200,169,106,.15)",
+              background: "rgba(255,255,255,0.65)",
+              color: "#8A7457",
+              border: "1px solid rgba(255,255,255,0.5)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
             }}
           >
-            <button
-              onClick={() => lang !== "en" && toggle()}
-              className="px-3 py-1 rounded-lg text-sm font-semibold transition-all"
-              style={{
-                background:
-                  lang === "en" ? "#C8A96A" : "transparent",
-                color:
-                  lang === "en" ? "#FFFFFF" : "#A67C2E",
-              }}
-            >
-              EN
-            </button>
+            {lang === "ar" ? "EN" : "العربية"}
+          </button>
 
-            <button
-              onClick={() => lang !== "ar" && toggle()}
-              className="px-3 py-1 rounded-lg text-sm font-semibold transition-all"
-              style={{
-                background:
-                  lang === "ar" ? "#C8A96A" : "transparent",
-                color:
-                  lang === "ar" ? "#FFFFFF" : "#A67C2E",
-              }}
-            >
-              AR
-            </button>
-          </div>
-
-          {/* السلايد الأول */}
-          <section className="flex justify-center relative z-20">
-            <div className="relative w-full aspect-[9/16] overflow-hidden">
+          <main className="relative z-10 flex flex-col items-center">
+            <section className="w-full min-h-screen flex items-center justify-center relative overflow-hidden">
               <video
                 ref={videoRef}
-                src={`${invitationImg}#t=0.001`}
-                preload="auto"
+                src={invitationImg}
+                autoPlay
                 muted
                 playsInline
-                autoPlay
                 loop
-                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-                style={{
-                  backgroundColor: "#F7F5F0",
-                }}
+                className="absolute inset-0 w-full h-full object-cover"
               />
 
               <div
-                className="absolute inset-0 pointer-events-none"
+                className="absolute inset-0"
                 style={{
                   background: "rgba(0,0,0,0.14)",
                 }}
               />
 
-              <div
-                dir={lang === "ar" ? "rtl" : "ltr"}
-                className="absolute inset-0 pointer-events-none z-10"
-              >
+              <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
                 <img
-                  src={lettersImage}
+                  src={lang === "ar" ? arabicLetters : englishLetters}
                   alt=""
-                  draggable={false}
-                  className="absolute inset-0 w-full h-full object-contain select-none"
-                  style={{
-                    filter:
-                      "drop-shadow(0 2px 8px rgba(0,0,0,0.55))",
-                  }}
+                  className="w-[70%] max-w-sm object-contain"
                 />
               </div>
-            </div>
-          </section>
+            </section>
 
-          {/* محتوى الدعوة تحت الفيديو */}
-          <section className="px-4 pt-14 pb-8">
-            <Reveal>
+            <section className="w-full flex flex-col items-center py-8">
               <div
-                dir={lang === "ar" ? "rtl" : "ltr"}
-                className="w-[92%] max-w-md p-6 sm:p-8 rounded-3xl text-center relative overflow-hidden my-4 mx-auto"
+                className="w-[92%] max-w-md rounded-3xl p-6 sm:p-8 text-center"
                 style={{
                   background: "rgba(255,255,255,0.28)",
-                  border:
-                    "1px solid rgba(255,255,255,0.45)",
-                  boxShadow:
-                    "0 12px 30px rgba(200,169,106,.12)",
+                  border: "1px solid rgba(255,255,255,0.45)",
+                  boxShadow: "0 12px 30px rgba(200,169,106,.12)",
                   backdropFilter: "blur(12px)",
                   WebkitBackdropFilter: "blur(12px)",
                 }}
               >
-                <div
-                  className={`flex flex-col items-center text-center gap-5 ${
-                    lang === "ar" ? "font-arabic" : ""
-                  }`}
-                >
-                  <div className="flex items-center justify-center my-4">
-                    <span
-                      className="inline-block text-6xl sm:text-7xl font-normal leading-none select-none"
-                      style={{
-                        fontFamily: "'Monasabat', sans-serif",
-                        color: "#A67C2E",
-                        transform: "scale(3.4)",
-                        transformOrigin: "center",
-                        textRendering: "geometricPrecision",
-                      }}
-                    >
-                      {t("invite_to")}
-                    </span>
-                  </div>
-
-                  <div
-                    className="font-tajawal text-base sm:text-lg"
-                    style={{
-                      color: "#8A7457",
-                    }}
-                  >
-                    {t("invite_join")}
-                  </div>
-
-                  <div
-                    className="font-tajawal text-base sm:text-lg"
-                    style={{
-                      color: "#8A7457",
-                    }}
-                  >
-                    {t("invite_day")}
-                  </div>
-
-                  {lang === "ar" && (
-                    <div
-                      className="font-tajawal text-base sm:text-lg pb-2"
-                      style={{
-                        color: "#8A7457",
-                      }}
-                    >
-                      {t("invite_with_love")}
-                    </div>
-                  )}
-
-                  {lang === "ar" && (
-                    <div
-                      className="flex items-center justify-center gap-1 text-3xl sm:text-4xl font-bold py-2"
-                      style={{
-                        color: "#A67C2E",
-                      }}
-                    >
-                      <span className="font-iran">
+                {lang === "ar" ? (
+                  <>
+                    <Reveal>
+                      <p
+                        className="font-arabic text-base sm:text-lg"
+                        style={{ color: "#8A7457" }}
+                      >
                         {t("mother_name1")}
-                      </span>
-                    </div>
-                  )}
+                      </p>
+                    </Reveal>
 
-                  {lang === "ar" && (
-                    <div
-                      className="font-tajawal text-base sm:text-lg"
-                      style={{
-                        color: "#8A7457",
-                      }}
-                    >
-                      {t("invite_attend")}
-                    </div>
-                  )}
-
-                  {lang === "ar" && (
-                    <div className="flex items-center justify-center gap-3 mt-2">
-                      <div className="flex flex-col items-center">
-                        <span
-                          className="font-iran text-5xl sm:text-6xl"
-                          style={{
-                            color: "#A67C2E",
-                          }}
-                        >
-                          {t("bride_name")}
-                        </span>
-
-                        <span
-                          className="font-tajawal text-base sm:text-lg"
-                          style={{
-                            color: "#8A7457",
-                          }}
-                        >
-                          {t("bride_family_name")}
-                        </span>
-                      </div>
-
-                      <span
-                        className="font-sull"
-                        style={{
-                          fontSize: "1.2em",
-                          color: "#A67C2E",
-                        }}
+                    <Reveal>
+                      <h1
+                        className="font-arabic text-3xl sm:text-4xl font-bold mt-4"
+                        style={{ color: "#A67C2E" }}
                       >
-                        {t("and")}
-                      </span>
+                        {t("bride_name")}
+                      </h1>
+                    </Reveal>
 
-                      <div className="flex flex-col items-center">
-                        <span
-                          className="font-iran text-5xl sm:text-6xl"
-                          style={{
-                            color: "#A67C2E",
-                          }}
-                        >
-                          {t("groom_name")}
-                        </span>
-
-                        <span
-                          className="font-tajawal text-base sm:text-lg"
-                          style={{
-                            color: "#8A7457",
-                          }}
-                        >
-                          {t("groom_family_name")}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  {lang === "ar" && (
-                    <div
-                      className="font-tajawal text-base sm:text-lg"
-                      style={{
-                        color: "#8A7457",
-                      }}
-                    >
-                      {t("invite_god_willing")}
-                    </div>
-                  )}
-
-                  {lang === "en" && (
-                    <>
+                    <Reveal>
                       <div
-                        className="font-serif flex flex-col items-center justify-center my-3"
-                        style={{
-                          color: "#A67C2E",
-                        }}
+                        className="font-arabic text-2xl my-2"
+                        style={{ color: "#A67C2E" }}
                       >
-                        <span
-                          className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-bold"
-                          style={{
-                            fontFamily:
-                              "'Snell Roundhand', 'URW Chancery L', 'Brush Script MT', cursive",
-                            letterSpacing: "0.08em",
-                            fontWeight: 700,
-                          }}
-                        >
-                          MOHAMMED
-                        </span>
-
-                        <span
-                          className="text-4xl sm:text-5xl my-1"
-                          style={{
-                            fontFamily:
-                              "'Snell Roundhand', 'URW Chancery L', 'Brush Script MT', cursive",
-                            color: "#A67C2E",
-                            fontStyle: "normal",
-                            fontWeight: 700,
-                          }}
-                        >
-                          &
-                        </span>
-
-                        <span
-                          className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-bold"
-                          style={{
-                            fontFamily:
-                              "'Snell Roundhand', 'URW Chancery L', 'Brush Script MT', cursive",
-                            letterSpacing: "0.08em",
-                            fontWeight: 700,
-                          }}
-                        >
-                          NOOR
-                        </span>
+                        &
                       </div>
+                    </Reveal>
 
+                    <Reveal>
+                      <h1
+                        className="font-arabic text-3xl sm:text-4xl font-bold"
+                        style={{ color: "#A67C2E" }}
+                      >
+                        {t("groom_name")}
+                      </h1>
+                    </Reveal>
+
+                    <Reveal>
+                      <p
+                        className="font-arabic text-base sm:text-lg mt-5"
+                        style={{ color: "#8A7457" }}
+                      >
+                        {t("family_names")}
+                      </p>
+                    </Reveal>
+                  </>
+                ) : (
+                  <>
+                    <Reveal>
+                      <p
+                        className="font-arabic text-base sm:text-lg"
+                        style={{ color: "#8A7457" }}
+                      >
+                        {t("mother_name1")}
+                      </p>
+                    </Reveal>
+
+                    <Reveal>
+                      <h1
+                        className="font-arabic text-3xl sm:text-4xl font-bold mt-4"
+                        style={{ color: "#A67C2E" }}
+                      >
+                        MOHAMMED
+                      </h1>
+                    </Reveal>
+
+                    <Reveal>
                       <div
-                        className="font-serif text-xs sm:text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-3 my-1"
-                        style={{
-                          color: "#8A7457",
-                        }}
+                        className="font-arabic text-2xl my-2"
+                        style={{ color: "#A67C2E" }}
                       >
-                        <span>RAMADAN</span>
-
-                        <span
-                          className="inline-block w-[1px] h-4"
-                          style={{
-                            backgroundColor: "#A67C2E",
-                          }}
-                        />
-
-                        <span>AL-ZUBIEDI</span>
+                        &
                       </div>
+                    </Reveal>
 
-                      <div
-                        className="font-serif text-base sm:text-lg leading-relaxed mt-2"
-                        style={{
-                          color: "#8A7457",
-                        }}
+                    <Reveal>
+                      <h1
+                        className="font-arabic text-3xl sm:text-4xl font-bold"
+                        style={{ color: "#A67C2E" }}
                       >
-                        We look forward to sharing this special day with you.
-                      </div>
-                    </>
-                  )}
-                </div>
+                        NOOR
+                      </h1>
+                    </Reveal>
+
+                    <Reveal>
+                      <p
+                        className="font-arabic text-base sm:text-lg mt-5"
+                        style={{ color: "#8A7457" }}
+                      >
+                        RAMADAN & AL-ZUBIEDI
+                      </p>
+                    </Reveal>
+                  </>
+                )}
               </div>
-            </Reveal>
-          </section>
+            </section>
 
-          {/* Countdown */}
-          <section className="px-4 py-16">
-            <Reveal>
-              <p
-                className="text-center font-arabic text-sm mb-2"
-                style={{ color: "#7C7367" }}
-              >
-                {t("countdown_date")}
-              </p>
-
-              <h2
-                className="text-center font-arabic text-3xl mb-10"
-                style={{ color: "#A67C2E" }}
-              >
-                {lang === "ar"
-                  ? t("countdown_title")
-                  : "Wedding Countdown."}
-              </h2>
-            </Reveal>
-
-            <Reveal delay={150}>
+            <section className="w-full flex justify-center py-6">
               <Countdown />
-            </Reveal>
-          </section>
+            </section>
 
-          <section className="-mx-4 py-8">
-            <img
-              src={dividerImg}
-              alt=""
-              className="block w-full h-auto"
-            />
-          </section>
+            <section className="w-full flex justify-center py-6">
+              <img
+                src={dividerImg}
+                alt=""
+                className="w-[70%] max-w-xs object-contain"
+              />
+            </section>
 
-          {/* Venue */}
-          <section className="px-4 py-16">
-            <Reveal>
-              <div className="text-center mb-8">
-                <img
-                  src={locationIcon}
-                  alt=""
-                  className="mx-auto mb-4 w-14 h-auto"
-                />
-
-                <h2
-                  className="font-arabic text-3xl"
-                  style={{ color: "#A67C2E" }}
-                >
-                  {lang === "ar" ? "موقع الفرح" : "Venue"}
-                </h2>
-
-                <div
-                  className="font-arabic text-sm mt-2"
-                  style={{ color: "#7C7367" }}
-                >
-                  {lang === "ar"
-                    ? "كل ما تحتاج معرفته"
-                    : "Everything You Need to Know"}
-                </div>
-
-                <img
-                  src={flowerDivider}
-                  alt=""
-                  className="mx-auto mt-4 mb-6 w-24 h-auto select-none"
-                  draggable={false}
-                />
-              </div>
-            </Reveal>
-
-            <Reveal delay={200}>
+            <section className="w-full flex flex-col items-center py-6">
               <div
+                className="w-[92%] max-w-md rounded-3xl p-6 sm:p-8 text-center"
                 style={{
-                  transform: "scale(0.9)",
-                  transformOrigin: "top center",
+                  background: "rgba(255,255,255,0.28)",
+                  border: "1px solid rgba(255,255,255,0.45)",
+                  boxShadow: "0 12px 30px rgba(200,169,106,.12)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
                 }}
               >
-                <div
-                  className="max-w-sm mx-auto rounded-3xl p-4"
-                  style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #E7D8B7",
-                    boxShadow:
-                      "0 12px 30px rgba(200,169,106,.12)",
-                  }}
-                >
-                  <div className="flex flex-col items-center justify-center gap-1 mb-4">
-                    <div className="flex items-center justify-center gap-2">
-                      <img
-                        src={locationIcon}
-                        alt=""
-                        className="w-7 h-7"
-                      />
-
-                      <span
-                        className="font-arabic text-sm"
-                        style={{
-                          color: "#A67C2E",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {t("hall_name")}
-                      </span>
-                    </div>
-
-                    <div
-                      className="font-arabic text-sm"
-                      style={{
-                        color: "#7C7367",
-                      }}
-                    >
-                      {t("venue_city")}
-                    </div>
-                  </div>
-
-                  <iframe
-                    title={t("map_title")}
-                    src="https://www.google.com/maps?q=Sapphire+Addis+Hotel,+Namibia+St,+Addis+Ababa,+Ethiopia&output=embed"
-                    width="100%"
-                    height="230"
-                    loading="lazy"
-                    style={{
-                      border: 0,
-                      borderRadius: "16px",
-                    }}
+                <Reveal>
+                  <img
+                    src={locationIcon}
+                    alt=""
+                    className="w-16 h-16 mx-auto object-contain mb-4"
                   />
+                </Reveal>
 
-                  {t("arrival_time").trim() && (
-                    <div className="hidden items-center justify-center gap-2 mt-3 mb-5">
-                      <Clock
-                        className="w-4 h-4"
-                        style={{
-                          color: "#687451",
-                        }}
-                      />
-
-                      <span
-                        className="font-arabic text-sm"
-                        style={{
-                          color: "#394132",
-                        }}
-                      >
-                        {t("arrival_time")}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <a
-                      href="https://maps.app.goo.gl/HLfudh8kqaeihyzU6?g_st=ic"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-3 rounded-xl text-center font-arabic text-sm"
-                      style={{
-                        background: "#FFFFFF",
-                        border: "1px solid #E7D8B7",
-                        color: "#A67C2E",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                      }}
-                    >
-                      {t("open_map")}
-                    </a>
-
-                    <a
-                      href="/event.ics"
-                      className="py-3 rounded-xl text-center font-arabic text-sm"
-                      style={{
-                        background: "#C8A96A",
-                        color: "#FFFFFF",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {t("add_calendar")}
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          </section>
-
-          {/* Details / Wedding Program */}
-          <section className="px-4 py-8">
-            <EventTimeline />
-          </section>
-
-          {/* Attendance Instructions */}
-          <section className="px-4 py-8">
-            <Reveal>
-              <AttendanceInstructions />
-            </Reveal>
-          </section>
-
-          {/* RSVP */}
-          <section className="px-4 py-16">
-            <Reveal>
-              <div className="text-center mb-10">
-                <img
-                  src={rsvpIcon}
-                  alt=""
-                  className="mx-auto mb-5 w-28 h-auto select-none"
-                  draggable={false}
-                />
-
-                <h2
-                  className="font-arabic text-3xl"
-                  style={{ color: "#A67C2E" }}
-                >
-                  {t("rsvp_title")}
-                </h2>
-
-                <div
-                  className="font-arabic text-sm mt-2"
-                  style={{ color: "#7B8470" }}
-                >
-                  {t("rsvp_deadline")}
-                </div>
-              </div>
-            </Reveal>
-
-            <RSVP />
-          </section>
-
-          {/* Footer */}
-          <footer className="px-4 py-12 text-center">
-            <Reveal>
-              <div className="flex flex-col items-center gap-1">
-                <div
-                  className="text-lg inline-flex items-center gap-1.5"
-                  style={{ color: "#A67C2E" }}
-                >
-                  <span className="font-iran">
-                    {t("designer_name1")}
-                  </span>
-
-                  <span
-                    className={`${
-                      lang === "ar"
-                        ? "font-sull"
-                        : "font-sans"
-                    }`}
+                <Reveal>
+                  <h2
+                    className="font-arabic text-2xl sm:text-3xl font-bold"
+                    style={{ color: "#A67C2E" }}
                   >
-                    {t("designer_and")}
-                  </span>
+                    {t("venue_title")}
+                  </h2>
+                </Reveal>
 
-                  <span className="font-iran">
-                    {t("designer_name2")}
-                  </span>
+                <Reveal>
+                  <p
+                    className="font-arabic text-sm sm:text-base mt-3"
+                    style={{ color: "#8A7457" }}
+                  >
+                    {t("venue_name")}
+                  </p>
+                </Reveal>
+
+                <div className="mt-6 rounded-2xl overflow-hidden">
+                  <iframe
+                    src="https://www.google.com/maps?q=Sapphire+Addis+Hotel+Namibia+St+Addis+Ababa+Ethiopia&output=embed"
+                    className="w-full h-64 border-0"
+                    loading="lazy"
+                  />
                 </div>
 
                 <a
-                  href="https://www.tiktok.com/@shim2t?_r=1&_t=ZS-95w0d8f7vnk"
+                  href="https://www.google.com/maps/search/?api=1&query=Sapphire+Addis+Hotel+Namibia+St+Addis+Ababa+Ethiopia"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex flex-col items-center mt-2"
-                  style={{ textDecoration: "none" }}
+                  className="inline-flex items-center gap-2 mt-5 px-5 py-3 rounded-full font-arabic"
+                  style={{
+                    background: "rgba(200,169,106,0.15)",
+                    color: "#8A7457",
+                  }}
                 >
-                  <div className="flex items-center gap-1">
-                    <img
-                      src={gaimIcon}
-                      alt="Gaim Store Icon"
-                      className="w-4 h-4"
-                    />
-
-                    <span
-                      className="font-arabic text-base"
-                      style={{
-                        fontWeight: 400,
-                        color: "#A67C2E",
-                      }}
-                    >
-                      {t("store")}
-                    </span>
-                  </div>
-
-                  <span
-                    className="mt-0.5 text-xs inline-flex items-center gap-1"
-                    style={{ color: "#7C7367" }}
-                  >
-                    TikTok @shim2t
-
-                    <svg
-                      className="w-3 h-3"
-                      fill="none"
-                      stroke="#C8A96A"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M7 17L17 7M17 7H7M17 7v10"
-                      />
-                    </svg>
-                  </span>
+                  <MapPin className="w-5 h-5" />
+                  {t("open_map")}
                 </a>
               </div>
-            </Reveal>
-          </footer>
-        </main>
+            </section>
+
+            <section className="w-full flex justify-center py-6">
+              <img
+                src={flowerDivider}
+                alt=""
+                className="w-[70%] max-w-xs object-contain"
+              />
+            </section>
+
+            <EventTimeline />
+
+            {/* Attendance Instructions */}
+            <AttendanceInstructions />
+
+            <section className="w-full flex flex-col items-center py-6">
+              <div
+                className="w-[92%] max-w-md rounded-3xl p-6 sm:p-8 text-center"
+                style={{
+                  background: "rgba(255,255,255,0.28)",
+                  border: "1px solid rgba(255,255,255,0.45)",
+                  boxShadow: "0 12px 30px rgba(200,169,106,.12)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
+                }}
+              >
+                <img
+                  src={rsvpIcon}
+                  alt=""
+                  className="w-20 h-20 mx-auto object-contain mb-4"
+                />
+
+                <RSVP />
+              </div>
+            </section>
+
+            <footer className="w-full py-10 flex flex-col items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Heart
+                  className="w-4 h-4"
+                  style={{ color: "#C8A96A" }}
+                />
+                <span
+                  className="font-arabic text-sm"
+                  style={{ color: "#8A7457" }}
+                >
+                  {t("designer")}
+                </span>
+                <Heart
+                  className="w-4 h-4"
+                  style={{ color: "#C8A96A" }}
+                />
+              </div>
+
+              <a
+                href="https://www.tiktok.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-arabic text-sm"
+                style={{ color: "#8A7457" }}
+              >
+                غيمة
+              </a>
+
+              <img
+                src={gaimIcon}
+                alt=""
+                className="w-8 h-8 object-contain"
+              />
+            </footer>
+          </main>
+        </>
       )}
     </div>
   );
