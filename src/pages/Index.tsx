@@ -759,14 +759,7 @@ const Index = () => {
                   {lang === "ar" ? "موقع الفرح" : "Venue"}
                 </h2>
 
-                <div
-                  className="font-arabic text-sm mt-2"
-                  style={{ color: "#7C7367" }}
-                >
-                  {lang === "ar"
-                    ? "كل ما تحتاج معرفته"
-                    : "Everything You Need to Know"}
-                </div>
+    
 
                 <img
                   src={flowerDivider}
