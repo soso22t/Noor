@@ -35,7 +35,7 @@ const ar: Dict = {
 
   // Details / Attendance Instructions
   details_title: "تعليمات الحضور",
-  details_subtitle: "كل ما تحتاج معرفته",
+  details_subtitle: "  ",
   no_kids: "يمنع اصطحاب الأطفال",
   no_cameras: "يمنع التصوير بالجوال",
   show_invitation: "يرجى إبراز الدعوة عند الحضور",
@@ -152,7 +152,7 @@ const en: Dict = {
 
   // Details / Attendance Instructions
   details_title: "Attendance Instructions",
-  details_subtitle: "Everything you need to know",
+  details_subtitle: "   ",
   no_kids: "Children are not permitted",
   no_cameras: "Mobile photography is strictly prohibited",
   show_invitation: "Please present your invitation upon arrival",
