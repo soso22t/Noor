@@ -21,29 +21,34 @@ import englishLetters from "@/assets/Ann.png";
 import { useLang } from "@/i18n/LanguageContext";
 
 interface EventItem {
-  time: string;
+  timeAr: string;
+  timeEn: string;
   titleAr: string;
   titleEn: string;
 }
 
 const events: EventItem[] = [
   {
-    time: "4:00 PM",
+    timeAr: "٤:٠٠ مساءً",
+    timeEn: "4:00 PM",
     titleAr: "الاستقبال",
     titleEn: "Reception",
   },
   {
-    time: "5:30 PM",
+    timeAr: "٥:٣٠ مساءً",
+    timeEn: "5:30 PM",
     titleAr: "مراسيم الزفاف",
     titleEn: "Wedding Ceremony",
   },
   {
-    time: "7:00 PM",
+    timeAr: "٧:٠٠ مساءً",
+    timeEn: "7:00 PM",
     titleAr: "العشاء",
     titleEn: "Dinner",
   },
   {
-    time: "11:00 PM",
+    timeAr: "١١:٠٠ مساءً",
+    timeEn: "11:00 PM",
     titleAr: "الانتهاء",
     titleEn: "Celebration Ends",
   },
@@ -66,8 +71,10 @@ const EventTimeline = () => {
       progress = Math.max(0, Math.min(1, progress));
       setScrollProgress(progress);
     };
+
     window.addEventListener("scroll", handleScroll);
     handleScroll();
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -90,11 +97,13 @@ const EventTimeline = () => {
       >
         {lang === "ar" ? "برنامج المناسبة" : "Wedding Program."}
       </h3>
+
       <div className="relative max-w-xs mx-auto py-2">
         <div
           className="absolute left-1/2 top-3 bottom-3 -translate-x-1/2 w-[2px] opacity-30"
           style={{ backgroundColor: "#C8A96A" }}
         />
+
         <div
           className="absolute left-1/2 top-3 -translate-x-1/2 w-[2.5px] rounded-full transition-all duration-150 ease-out"
           style={{
@@ -103,10 +112,12 @@ const EventTimeline = () => {
             boxShadow: "0 0 10px rgba(200, 169, 106, 0.8)",
           }}
         />
+
         <div className="space-y-12 relative z-10">
           {events.map((event, index) => {
             const threshold = index / (events.length - 1 || 1);
             const isActive = scrollProgress >= threshold - 0.1;
+
             return (
               <div
                 key={index}
@@ -121,6 +132,7 @@ const EventTimeline = () => {
                 >
                   {lang === "ar" ? event.titleAr : event.titleEn}
                 </div>
+
                 <div className="col-span-1 flex justify-center items-center">
                   <div
                     className="w-4 h-4 rounded-full border-2 transition-all duration-500 ease-out"
@@ -136,6 +148,7 @@ const EventTimeline = () => {
                     }}
                   />
                 </div>
+
                 <div
                   className="col-span-2 text-right pr-2 sm:pr-3 font-display text-xs sm:text-sm font-semibold tracking-wider dir-ltr transition-opacity duration-300"
                   style={{
@@ -143,7 +156,7 @@ const EventTimeline = () => {
                     opacity: isActive ? 1 : 0,
                   }}
                 >
-                  {event.time}
+                  {lang === "ar" ? event.timeAr : event.timeEn}
                 </div>
               </div>
             );
@@ -155,7 +168,7 @@ const EventTimeline = () => {
 };
 
 const AttendanceInstructions = () => {
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   const instructions = [
     {
@@ -195,7 +208,8 @@ const AttendanceInstructions = () => {
         {instructions.map((item, index) => (
           <div
             key={index}
-            className="w-full rounded-2xl px-5 py-4 flex items-center justify-between"
+            dir="ltr"
+            className="w-full rounded-2xl px-5 py-4 flex items-center"
             style={{
               background: "rgba(255,255,255,0.38)",
               border: "1px solid rgba(255,255,255,0.45)",
@@ -203,14 +217,16 @@ const AttendanceInstructions = () => {
             }}
           >
             <div
-              className="font-arabic text-xs sm:text-sm font-bold text-right flex-1"
+              className={`font-arabic text-xs sm:text-sm font-bold flex-1 ${
+                lang === "ar" ? "text-right" : "text-left"
+              }`}
               style={{ color: "#33332B" }}
             >
               {t(item.key)}
             </div>
 
             <div
-              className="p-2 rounded-full flex justify-center items-center mr-3"
+              className="p-2 rounded-full flex justify-center items-center ml-3"
               style={{
                 background: "rgba(200, 169, 106, 0.15)",
               }}
@@ -356,6 +372,7 @@ const Index = () => {
         className="fixed w-px h-px opacity-0 pointer-events-none"
         aria-hidden="true"
       />
+
       <img
         src={englishLetters}
         alt=""
@@ -420,7 +437,6 @@ const Index = () => {
           {/* السلايد الأول */}
           <section className="flex justify-center relative z-20">
             <div className="relative w-full aspect-[9/16] overflow-hidden">
-              {/* فيديو مفرد يحافظ على الإطار الأول فورياً */}
               <video
                 ref={videoRef}
                 src={`${invitationImg}#t=0.001`}
@@ -623,11 +639,12 @@ const Index = () => {
                         }}
                       >
                         <span
-                          className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-normal"
+                          className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-bold"
                           style={{
                             fontFamily:
                               "'Snell Roundhand', 'URW Chancery L', 'Brush Script MT', cursive",
                             letterSpacing: "0.08em",
+                            fontWeight: 700,
                           }}
                         >
                           MOHAMMED
@@ -640,17 +657,19 @@ const Index = () => {
                               "'Snell Roundhand', 'URW Chancery L', 'Brush Script MT', cursive",
                             color: "#A67C2E",
                             fontStyle: "normal",
+                            fontWeight: 700,
                           }}
                         >
                           &
                         </span>
 
                         <span
-                          className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-normal"
+                          className="text-3xl sm:text-4xl uppercase tracking-[0.25em] font-bold"
                           style={{
                             fontFamily:
                               "'Snell Roundhand', 'URW Chancery L', 'Brush Script MT', cursive",
                             letterSpacing: "0.08em",
+                            fontWeight: 700,
                           }}
                         >
                           NOOR
